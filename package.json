@@ -1,0 +1,25 @@
+{
+  "name": "kodda",
+  "version": "1.0.0",
+  "description": "An app to save all your script snippets for future reuse",
+  "main": "main.js",
+  "scripts": {
+    "start": "npx vite dev"
+  },
+  "keywords": [
+    "kodda",
+    "snippets",
+    "code",
+    "snippets",
+    "coding",
+    "code",
+    "reuse"
+  ],
+  "author": "Preslav Kolev",
+  "license": "MIT",
+  "dependencies": {
+    "vanjs-core": "^1.5.3",
+    "vanjs-element": "^2.0.0",
+    "vite": "^6.0.7"
+  }
+}
