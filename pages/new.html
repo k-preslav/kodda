@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kodda</title>
+
+    <link rel="stylesheet" href="../styles/style.css"/>
+</head>
+<body>
+    <textarea placeholder="Code" id="codeInput"></textarea>
+    <div class="propertiesPanel">
+        <input placeholder="Name" id="nameInput">
+        <select id="typeDropdown">
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="js">JavaScript</option>
+            <option value="cs">C#</option>
+            <option value="cpp">C++</option>
+        </select>
+        <textarea placeholder="Description" id="descriptionInput"></textarea>
+        <button id="saveSnippetButton">Save Snippet</button>
+    </div>
+
+    <script type="module" src="../src/snippetManager.js"></script>
+</body>
+</html>
