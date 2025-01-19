@@ -1,4 +1,5 @@
-import { addSnippet } from "./apiHelper";
+import { addSnippet, generateDescription } from "./apiHelper";
+import { detectLanguage } from "./languageDetect";
 
 document.addEventListener("DOMContentLoaded", () => {
   const nameInput = document.getElementById("nameInput");
@@ -8,8 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const messageLabel = document.getElementById("messageLabel");
   const languageTypeCodeBar = document.getElementById("languageType");
 
+  // Create the editor
   let editor;
-
   require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs' } });
 
   require(['vs/editor/editor.main'], function () {
@@ -49,37 +50,33 @@ document.addEventListener("DOMContentLoaded", () => {
       minimap: { enabled: false },
     });
 
+    let changeTimeout;
+
     editor.getModel().onDidChangeContent(() => {
       const text = editor.getValue();
+      descriptionInput.value = '';
+      
+      clearTimeout(changeTimeout);
+      changeTimeout = setTimeout(() => {
+        if (text) {
+          descriptionInput.value = 'Generating...';
+          
+          // Generate description
+          generateDescription(text).then((data) => {
+            descriptionInput.value = data.description;
+          });
+        }
+      }, 1000);
+
       const language = detectLanguage(text);
+  
       languageTypeCodeBar.textContent = language;
+      typeDropdown.value = language;
       monaco.editor.setModelLanguage(editor.getModel(), language);
     });
   });
 
-  function detectLanguage(text) {
-    if (text.includes('function') && (text.includes('var') || text.includes('let') || text.includes('const')) || text.includes('=>')) {
-      return 'javascript';
-    }
-    else if (text.includes('<html>') || text.includes('</html>') || text.includes('<body>') || text.includes('<script>')) {
-      return 'html';
-    }
-    else if (text.includes('def ') && (text.includes('class ') || text.includes('import '))) {
-      return 'python';
-    }
-    else if (text.includes('void ') && (text.includes('public ') || text.includes('static '))) {
-      return 'csharp';
-    }
-    else if (text.includes('void ') && text.includes("class ") && text.includes("#include")) {
-      return 'cpp';
-    }
-    else if (text.includes('void ') && text.includes("#include ")) {
-      return 'c';
-    }
-    else
-      return 'other';
-  }
-
+  // Save Snippet Event
   saveSnipButton.addEventListener("click", () => {
     messageLabel.textContent = "";
     let userId = localStorage.getItem("userId");

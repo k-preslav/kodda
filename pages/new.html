@@ -44,11 +44,13 @@
             <div class="propBox">
                 <p>Type</p>
                 <select id="typeDropdown">
+                    <option value="other">-</option>
                     <option value="html">HTML</option>
                     <option value="css">CSS</option>
-                    <option value="js">JavaScript</option>
-                    <option value="cs">C#</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="c">C</option>
                     <option value="cpp">C++</option>
+                    <option value="csharp">C#</option>
                 </select>
             </div>
             <div class="propBox" id="descPropBox">
@@ -61,6 +63,6 @@
     <p id="messageLabel"></p>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs/loader.min.js"></script>
-    <script type="module" src="../src/snippetManager.js"></script>
+    <script type="module" src="../src/newSnippet.js"></script>
 </body>
 </html>
