@@ -4,17 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kodda</title>
+    
     <link rel="stylesheet" href="../styles/new.css"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300..700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs/editor/editor.main.min.css" />
 </head>
 <body>
-    <div class="container">
+    <div class="navBar">
+        <h1 class="title">kodda</h1>
+        <div class="navBarRight">
+            <a href="#">New</a>
+            <a href="#">Saved</a>
+            <button>P</button>
+        </div>
+    </div>
+    <div class="new-container">
         <div class="codePanel">
-            <textarea placeholder="Code" id="codeInput"></textarea>
+            <div class="editorBar">
+                <p id="languageType">other</p>
+                <div class="zoomControl">
+                    <button id="zoomOut">-</button>
+                    <p id="zoomLevel">100%</p>
+                    <button id="zoomIn">+</button>
+                </div>
+            </div>
+            <div id="editor" style="width: 100%; height: 100%;"></div>
         </div>
         <div class="propertiesPanel">
             <div class="propBox">
                 <p>Name</p>
-                <input id="nameInput">
+                <input id="nameInput" autocomplete="off">
             </div>
             <div class="propBox">
                 <p>Type</p>
@@ -35,6 +60,7 @@
     </div>
     <p id="messageLabel"></p>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs/loader.min.js"></script>
     <script type="module" src="../src/snippetManager.js"></script>
 </body>
 </html>

@@ -5,40 +5,141 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Fredoka", serif;
+  margin: 0;
+  padding: 0;
   display: flex;
-  width: 100vw;
+  flex-direction: column; /* Stack navBar and container vertically */
   height: 100vh;
-  padding: 10px;
+  background-color: #252525; /* Background of the entire page */
+  color: white; /* Default text color for dark theme */
+  overflow: hidden;
 }
 
-.container {
+.title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 48px;
+
+  background-color: white;
+  color: transparent;
+
+  text-shadow: 0px 0px 25px rgba(0, 0, 0, 0.25);
+  -webkit-background-clip: text;
+     -moz-background-clip: text;
+          background-clip: text;
+}
+
+
+.navBar {
   display: flex;
-  width: 100%;
-  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  padding: 10px 20px;
+  font-size: 24px;
+}
+
+.navBarRight {
+  display: flex;
+  align-items: center; 
+  gap: 20px;
+}
+
+.navBarRight a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.navBarRight button {
+  width: 36px;  /* Set the width */
+  height: 36px;  /* Set the height to match the width */
+  padding: 0;  /* Ensure no extra padding is added */
+  
+  background-color: #7500ce;  /* Background color */
+  color: white;  /* Text color */
+  border: none;  /* Remove border */
+  border-radius: 50%;  /* Make it circular */
+  cursor: pointer;  /* Change the cursor on hover */
+  font-size: 14px;  /* Font size */
+  display: flex;
+  justify-content: center;  /* Center the content horizontally */
+  align-items: center;  /* Center the content vertically */
+  transition: background-color 0.3s ease;  /* Smooth transition for background color */
+}
+
+.navBarRight button:hover {
+  background-color: #6800ad;
+}
+
+.new-container {
+  display: flex;
+  flex: 1;
+  padding: 15px;
+  padding-top: 0;
 }
 
 .codePanel {
   flex: 8;
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  background-color: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-right: 20px; /* Space between codePanel and propertiesPanel */
+  background-color: #2D2D2D;
+  border-radius: 10px;
+  margin-right: 20px;
+  color: white; /* Text color */
+}
+
+#editor {
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+
+  padding: 1px 0;
+}
+
+.editorBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #373737;
+  padding: 2px 5px 2px 12px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  font-family: "Fredoka", sans-serif;
+  border-radius: 10px 10px 0 0;
+  font-weight: 300;
+}
+
+.zoomControl button {
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: "Fredoka", sans-serif;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: 100;
+  transition: background-color 0.1s ease;
+}
+
+.zoomControl button:hover {
+  background-color: #434343;
+}
+
+.zoomControl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 textarea {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-family: monospace;
+  background-color: #373737;
+  color: white;
   resize: none;
   margin-bottom: 10px;
   overflow: auto;
-  height: 95%;
 }
 
 .propertiesPanel {
@@ -46,10 +147,11 @@ textarea {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background-color: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ccc;
+  background-color: #2D2D2D; /* Panel background */
+  border-radius: 10px;
+  border: none;
+  gap: 10px;
+  color: white; /* Text color */
 }
 
 .propBox {
@@ -57,35 +159,58 @@ textarea {
 }
 
 .propBox p {
-  margin-bottom: 5px;
-  font-weight: bold;
+  margin-bottom: 8px;
+  margin-left: 2px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 input, select, textarea {
+  outline: none;
+  font-family: "Fredoka", serif;
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  background-color: #373737; /* Input background */
+  color: white; /* Text color */
+  border-radius: 7px;
+  border: none;
 }
 
 button {
+  font-family: "Fredoka", serif;
+  font-weight: 600;
   padding: 10px 15px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: #7500ce; /* Button background */
+  color: white; /* Button text color */
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
+  width: 100%;
+  border-radius: 7px;
   transition: background-color 0.3s ease;
-  margin-top: auto;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #6800ad; /* Darker purple on hover */
+}
+
+#descPropBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+#descriptionInput {
+  flex: 1;
+  height: auto;
+  background-color: #373737; /* Match other inputs */
+  color: white; /* Text color */
 }
 
 #messageLabel {
   margin-top: 10px;
   font-size: 14px;
-  color: #777;
+  color: #9000FF; /* Message text color */
 }
