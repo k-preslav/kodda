@@ -4,23 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kodda</title>
-
-    <link rel="stylesheet" href="../styles/style.css"/>
+    <link rel="stylesheet" href="../styles/new.css"/>
 </head>
 <body>
-    <textarea placeholder="Code" id="codeInput"></textarea>
-    <div class="propertiesPanel">
-        <input placeholder="Name" id="nameInput">
-        <select id="typeDropdown">
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-            <option value="js">JavaScript</option>
-            <option value="cs">C#</option>
-            <option value="cpp">C++</option>
-        </select>
-        <textarea placeholder="Description" id="descriptionInput"></textarea>
-        <button id="saveSnippetButton">Save Snippet</button>
+    <div class="container">
+        <div class="codePanel">
+            <textarea placeholder="Code" id="codeInput"></textarea>
+        </div>
+        <div class="propertiesPanel">
+            <div class="propBox">
+                <p>Name</p>
+                <input id="nameInput">
+            </div>
+            <div class="propBox">
+                <p>Type</p>
+                <select id="typeDropdown">
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="js">JavaScript</option>
+                    <option value="cs">C#</option>
+                    <option value="cpp">C++</option>
+                </select>
+            </div>
+            <div class="propBox" id="descPropBox">
+                <p>Description</p>
+                <textarea id="descriptionInput"></textarea>
+            </div>
+            <button id="saveSnippetButton">Save Snippet</button>
+        </div>
     </div>
+    <p id="messageLabel"></p>
 
     <script type="module" src="../src/snippetManager.js"></script>
 </body>

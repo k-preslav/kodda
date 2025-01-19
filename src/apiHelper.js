@@ -41,7 +41,7 @@ export async function addSnippet(userId, title, description, code, language = "P
   });
 
   const data = await response.json();
-  console.log(data);
+  return data;
 }
 
 export async function fetchSnippets(userId) {
