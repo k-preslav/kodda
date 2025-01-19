@@ -1,3 +1,4 @@
+import { localStorageHasUserId } from "./accountManager";
 import { addSnippet, generateDescription } from "./apiHelper";
 import { detectLanguage } from "./languageDetect";
 
@@ -6,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeDropdown = document.getElementById("typeDropdown");
   const descriptionInput = document.getElementById("descriptionInput");
   const saveSnipButton = document.getElementById("saveSnippetButton");
-  const messageLabel = document.getElementById("messageLabel");
   const languageTypeCodeBar = document.getElementById("languageType");
 
   // Create the editor
@@ -59,52 +59,70 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(changeTimeout);
       changeTimeout = setTimeout(() => {
         if (text) {
-          descriptionInput.value = 'Generating...';
-          
-          // Generate description
-          generateDescription(text).then((data) => {
-            descriptionInput.value = data.description;
-          });
+          if (localStorageHasUserId()) {
+            descriptionInput.value = 'Generating...';
+
+            // Generate description
+            generateDescription(text).then((data) => {
+              descriptionInput.value = data.description;
+            });
+          }
+          else {
+            console.log("User is not logged in.");
+            descriptionInput.value = 'To generate a description you must Log In.';
+          }
         }
       }, 1000);
 
       const language = detectLanguage(text);
-  
-      languageTypeCodeBar.textContent = language;
+
       typeDropdown.value = language;
-      monaco.editor.setModelLanguage(editor.getModel(), language);
+      typeDropdown.dispatchEvent(new Event('change'));
     });
   });
 
+  // Check if user is logged in
+  if (!localStorageHasUserId()) {
+    saveSnipButton.textContent = "Log In";
+  }
+
   // Save Snippet Event
   saveSnipButton.addEventListener("click", () => {
-    messageLabel.textContent = "";
-    let userId = localStorage.getItem("userId");
-
-    if (userId) {
+    if (localStorageHasUserId()) {
       const title = nameInput.value;
       const description = descriptionInput.value;
-      const code = editor.getValue(); // Get code from Monaco
+      const code = editor.getValue();
       const language = typeDropdown.value;
 
       addSnippet(userId, title, description, code, language)
         .then((data) => {
           if (data.snippetExists) {
-            messageLabel.textContent = "This snippet is already added to your account.";
-          } else {
+            // TODO: Add a message that the snippet exists
+            console.log(data.snippetExists);
+          } else if (data.fieldsReguired) {
+            // TODO: Add a message that the inputs are empty
+            console.log(data.fieldsReguired);
+          }else {
             clearInputs();
-            messageLabel.textContent = "Snippet saved successfully!";
           }
         })
         .catch((err) => {
           console.error("Error saving snippet:", err);
-          messageLabel.textContent = "An error occurred while saving the snippet.";
         });
     } else {
       console.log("User is not logged in.");
       window.location.href = "../index.html";
     }
   });
+
+  // On language type selected
+  typeDropdown.addEventListener("change", (event) => {
+    const option = event.target.value;
+
+    languageTypeCodeBar.textContent = option;
+    monaco.editor.setModelLanguage(editor.getModel(), option);
+  });
+  
 
   function clearInputs() {
     nameInput.value = '';

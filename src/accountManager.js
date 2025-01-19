@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const messageLabel = document.getElementById("messageLabel");
   
-  registerButton.addEventListener("click", register);
-  loginButton.addEventListener("click", login);
+  registerButton?.addEventListener("click", register);
+  loginButton?.addEventListener("click", login);
   
   function register() {
     registerUser(usernameInput.value, emailInput.value, passwordInput.value).then((data) => {
@@ -73,5 +73,15 @@ export async function autoLogin() {
     }
   }
 
+  return false;
+}
+
+export function localStorageHasUserId() {
+  let userId = localStorage.getItem("userId");
+
+  if (userId) {
+    return true;
+  }
+  
   return false;
 }
