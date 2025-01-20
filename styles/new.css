@@ -82,7 +82,7 @@ body {
   gap: 5px;
 }
 
-.propertiesPanel {
+#propertiesPanel {
   flex: 2;
   display: flex;
   flex-direction: column;
@@ -99,6 +99,10 @@ body {
   opacity: 0;
 }
 
+#propertiesPanel button {
+  text-shadow: 0px 3px 10px #2525256b;
+}
+
 .propBox {
   margin-bottom: 15px;
 }
@@ -108,10 +112,6 @@ body {
   margin-left: 2px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.75);
-}
-
-.propertiesPanel button {
-  text-shadow: 0px 3px 10px #2525256b;
 }
 
 select {
@@ -172,5 +172,17 @@ select {
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes glowingShadow {
+  0% {
+    box-shadow: 0px 0px 15px rgba(117, 0, 206, 0);
+  }
+  50% {
+    box-shadow: 0px 0px 10px rgba(117, 0, 206, 1);
+  }
+  100% {
+    box-shadow: 0px 0px 15px rgba(117, 0, 206, 0.0);
   }
 }

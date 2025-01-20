@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeDropdown = document.getElementById("typeDropdown");
   const languageTypeCodeBar = document.getElementById("languageType");
   const saveSnipButton = document.getElementById("saveSnippetButton");
+  
+  const propertiesPanel = document.getElementById("propertiesPanel");
 
   let editor;
 
@@ -87,9 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
             wrapWordsWithSpans("Generating...", descriptionInput);            
             languageTypeCodeBar.textContent = "...";
 
-            getCodeProperties(text).then((data) => {
-              console.log(data);
+            propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
+            propertiesPanel.style.opacity = 1;
 
+            getCodeProperties(text).then((data) => {
               wrapWordsWithSpans(data.title, nameInput);
               wrapWordsWithSpans(data.description, descriptionInput);
               
@@ -100,7 +103,10 @@ document.addEventListener("DOMContentLoaded", () => {
               // Wait for the description animation to finish
               setTimeout(() => {
                 propertiesReady = true;
-                propertiesReadyPromiseResolve(); // Resolve the promise
+                propertiesReadyPromiseResolve();
+
+                // Stop the glow animation
+                propertiesPanel.style.animation = "none";
               }, data.description.split(' ').length * 15 + 750);
             });
           } else {
@@ -119,6 +125,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (localStorageHasUserId()) {
       if (!propertiesReady) {
         saveSnipButton.textContent = "Saving...";
+
+        propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
+        propertiesPanel.style.opacity = 1;
+
         console.log("Waiting for properties to finish generating...");
         
         await propertiesReadyPromise;
