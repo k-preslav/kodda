@@ -8,24 +8,24 @@ export function detectLanguage(code) {
   }
 
   // HTML
-  else if (code.includes('<html>') || code.includes('</html>') || 
+  if (code.includes('<html>') || code.includes('</html>') || 
            code.includes('<body>') || code.includes('<script>') || 
            code.includes('</script>') || code.includes('</body>')) {
     return 'html';
   }
 
   // Python
-  else if (code.includes('def ') && code.includes(':')) {
+  if (code.includes('def ') || code.includes(':')) {
     return 'python';
   }
 
   // C or C++
-  else if (code.includes('#include') && ((code.includes('void ') || code.includes('int main()')))) {
+  if (code.includes('#include') && ((code.includes('void ') || code.includes('int main()')))) {
     return 'cpp'; 
   }
 
   // C#
-  else if ((code.includes('void ') || code.includes('public ') || 
+  if ((code.includes('void ') || code.includes('public ') || 
             code.includes('static ') || code.includes('internal ') || 
             code.includes('private ') || code.includes('protected ')) &&
             code.includes('class ') && !code.includes('#include')) {
@@ -33,7 +33,7 @@ export function detectLanguage(code) {
   }
 
   // CSS
-  else if (code.includes('{') && code.includes('}')) {
+  if (code.includes('{') && code.includes('}')) {
     if (code.includes('color') || code.includes('font') || code.includes('margin') || code.includes('padding')) {
       return 'css';
     }

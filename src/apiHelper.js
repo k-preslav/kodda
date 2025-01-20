@@ -60,8 +60,8 @@ export async function deleteSnippet(snippetId) {
 }
 
 
-export async function getTitleAndDescription(code) {
-  const response = await fetch(`${API_BASE_URL}/genDesc`, {
+export async function getCodeProperties(code) {
+  const response = await fetch(`${API_BASE_URL}/genProp`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code })

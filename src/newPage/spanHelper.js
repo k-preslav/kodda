@@ -7,4 +7,5 @@ export function wrapWordsWithSpans(text, inputElement) {
     .join(" ");
 
     inputElement.setAttribute("contenteditable", "true");
+    inputElement.value = text;
 }

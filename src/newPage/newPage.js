@@ -1,5 +1,5 @@
-import { localStorageHasUserId } from "./accountManager";
-import { getTitleAndDescription } from "./apiHelper";
+import { localStorageHasUserId } from "../accountManager";
+import { addSnippet, getCodeProperties } from "../apiHelper";
 import { detectLanguage } from "./languageDetect";
 import { wrapWordsWithSpans } from "./spanHelper";
 import { initializeZoomLevel } from "./zoomHelper";
@@ -54,6 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
     setupEditorEvents();
     initializeZoomLevel(editor);
     clearInputs();
+
+    if (!localStorageHasUserId()) {
+      saveSnipButton.textContent = "Log In";
+    }
   });
 
   // Set up editor events
@@ -65,15 +69,23 @@ document.addEventListener("DOMContentLoaded", () => {
       wrapWordsWithSpans("", nameInput);
       wrapWordsWithSpans("", descriptionInput);
 
+      languageTypeCodeBar.textContent = "other";
+
       clearTimeout(changeTimeout);
       changeTimeout = setTimeout(() => {
         if (text) {
           if (localStorageHasUserId()) {
-            wrapWordsWithSpans("Generating...", descriptionInput);
+            wrapWordsWithSpans("Generating...", descriptionInput);            
+            languageTypeCodeBar.textContent = "...";
 
-            getTitleAndDescription(text).then((data) => {
+            getCodeProperties(text).then((data) => {
+              console.log(data);
+
               wrapWordsWithSpans(data.title, nameInput);
               wrapWordsWithSpans(data.description, descriptionInput);
+              
+              typeDropdown.value = data.language;
+              languageTypeCodeBar.textContent = data.language;
             });
           } else {
             console.log("User is not logged in.");
@@ -81,10 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       }, 1650);
-
-      const language = detectLanguage(text);
-      typeDropdown.value = language;
-      typeDropdown.dispatchEvent(new Event('change'));
     });
   }
 
