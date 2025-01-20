@@ -65,8 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     editor.getModel().onDidChangeContent(() => {
       const text = editor.getValue();
-      wrapWordsWithSpans("", nameInput);
-      wrapWordsWithSpans("", descriptionInput);
+
+      clearInputs(true);
 
       languageTypeCodeBar.textContent = "other";
 
@@ -132,11 +132,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Clear input fields
-  function clearInputs() {
+  function clearInputs(ignoreEditor=false) {
     wrapWordsWithSpans("", nameInput);
     wrapWordsWithSpans("", descriptionInput);
 
-    typeDropdown.value = typeDropdown.options[0].value;
-    editor.setValue('');
+    typeDropdown.value = "other";
+    if (!ignoreEditor)
+      editor.setValue('');
   }
 });

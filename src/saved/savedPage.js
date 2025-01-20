@@ -10,6 +10,11 @@ function displaySnippets() {
   
   if (userId) {
     fetchSnippets(userId).then((snippets) => {
+      if (snippets.length === 0) {
+        document.getElementById("noSnippets").style.visibility = "visible";
+        return;
+      }
+
       snippets.forEach((snip, index) => {
         createSnippetPreview(snip.title, snip.description, (previewElement) => {
           setTimeout(() => showSnippet(previewElement), index * 45);
