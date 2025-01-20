@@ -19,3 +19,11 @@ button {
 button:hover {
   background-color: #6800ad;
 }
+
+/* Disabled state */
+button:disabled {
+  background-color: #6800adad; 
+  color: #b6b2c0;
+  cursor: default;
+  box-shadow: none;
+}

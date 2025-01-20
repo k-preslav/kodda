@@ -12,6 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let editor;
 
+  let propertiesReady = false;
+  let propertiesReadyPromiseResolve;
+  let propertiesReadyPromise = new Promise((resolve) => {
+    propertiesReadyPromiseResolve = resolve;
+  });
+
   require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs' } });
 
   require(['vs/editor/editor.main'], function () {
@@ -52,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupEditorEvents();
     initializeZoomLevel(editor);
-    clearInputs();
+    reset();
 
     if (!localStorageHasUserId()) {
       saveSnipButton.textContent = "Log In";
@@ -66,9 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
     editor.getModel().onDidChangeContent(() => {
       const text = editor.getValue();
 
-      clearInputs(true);
+      reset(true);
 
       languageTypeCodeBar.textContent = "other";
+
+      if (text == '') {
+          saveSnipButton.disabled = true;
+      }
 
       clearTimeout(changeTimeout);
       changeTimeout = setTimeout(() => {
@@ -86,6 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
               typeDropdown.value = data.language;
               languageTypeCodeBar.textContent = data.language;
               monaco.editor.setModelLanguage(editor.getModel(), data.language);
+
+              // Wait for the description animation to finish
+              setTimeout(() => {
+                propertiesReady = true;
+                propertiesReadyPromiseResolve(); // Resolve the promise
+              }, data.description.split(' ').length * 15 + 750);
             });
           } else {
             console.log("User is not logged in.");
@@ -97,8 +113,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Handle save snippet event
-  saveSnipButton.addEventListener("click", () => {
+  saveSnipButton.addEventListener("click", async () => {
+    saveSnipButton.disabled = true;
+
     if (localStorageHasUserId()) {
+      if (!propertiesReady) {
+        saveSnipButton.textContent = "Saving...";
+        console.log("Waiting for properties to finish generating...");
+        
+        await propertiesReadyPromise;
+        console.log("Properties ready!");
+      }
+
       const title = nameInput.value;
       const description = descriptionInput.value;
       const code = editor.getValue();
@@ -111,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
           } else if (data.fieldsReguired) {
             console.log(data.fieldsReguired);
           } else {
-            clearInputs();
+            reset();
           }
         })
         .catch((err) => {
@@ -132,11 +158,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Clear input fields
-  function clearInputs(ignoreEditor=false) {
+  function reset(ignoreEditor=false) {
     wrapWordsWithSpans("", nameInput);
     wrapWordsWithSpans("", descriptionInput);
 
     typeDropdown.value = "other";
+
+    saveSnipButton.textContent = "Save Snippet";
+    saveSnipButton.disabled = false;
+
+    propertiesReady = false;
+    propertiesReadyPromiseResolve = null;
+    propertiesReadyPromise = new Promise((resolve) => {
+      propertiesReadyPromiseResolve = resolve;
+    });
+
     if (!ignoreEditor)
       editor.setValue('');
   }

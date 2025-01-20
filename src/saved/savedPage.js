@@ -21,7 +21,7 @@ function displaySnippets() {
         });
       });
     });
-  }
+  } else document.getElementById("noSnippets").style.visibility = "visible";
 }
 
 function createSnippetPreview(title, description, callback) {
