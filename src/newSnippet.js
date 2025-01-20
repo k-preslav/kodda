@@ -1,16 +1,18 @@
 import { localStorageHasUserId } from "./accountManager";
-import { addSnippet, generateDescription } from "./apiHelper";
+import { getTitleAndDescription } from "./apiHelper";
 import { detectLanguage } from "./languageDetect";
+import { wrapWordsWithSpans } from "./spanHelper";
+import { initializeZoomLevel } from "./zoomHelper";
 
 document.addEventListener("DOMContentLoaded", () => {
   const nameInput = document.getElementById("nameInput");
-  const typeDropdown = document.getElementById("typeDropdown");
   const descriptionInput = document.getElementById("descriptionInput");
-  const saveSnipButton = document.getElementById("saveSnippetButton");
+  const typeDropdown = document.getElementById("typeDropdown");
   const languageTypeCodeBar = document.getElementById("languageType");
+  const saveSnipButton = document.getElementById("saveSnippetButton");
 
-  // Create the editor
   let editor;
+
   require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs' } });
 
   require(['vs/editor/editor.main'], function () {
@@ -46,47 +48,47 @@ document.addEventListener("DOMContentLoaded", () => {
       automaticLayout: true,
       quickSuggestions: false,
       fontFamily: `"Source Code Pro", monospace`,
-      fontSize: 14,
       minimap: { enabled: false },
     });
 
+    setupEditorEvents();
+    initializeZoomLevel(editor);
+    clearInputs();
+  });
+
+  // Set up editor events
+  function setupEditorEvents() {
     let changeTimeout;
 
     editor.getModel().onDidChangeContent(() => {
       const text = editor.getValue();
-      descriptionInput.value = '';
-      
+      wrapWordsWithSpans("", nameInput);
+      wrapWordsWithSpans("", descriptionInput);
+
       clearTimeout(changeTimeout);
       changeTimeout = setTimeout(() => {
         if (text) {
           if (localStorageHasUserId()) {
-            descriptionInput.value = 'Generating...';
+            wrapWordsWithSpans("Generating...", descriptionInput);
 
-            // Generate description
-            generateDescription(text).then((data) => {
-              descriptionInput.value = data.description;
+            getTitleAndDescription(text).then((data) => {
+              wrapWordsWithSpans(data.title, nameInput);
+              wrapWordsWithSpans(data.description, descriptionInput);
             });
-          }
-          else {
+          } else {
             console.log("User is not logged in.");
-            descriptionInput.value = 'To generate a description you must Log In.';
+            wrapWordsWithSpans('To generate a description you must Log In.', descriptionInput);
           }
         }
-      }, 1000);
+      }, 1650);
 
       const language = detectLanguage(text);
-
       typeDropdown.value = language;
       typeDropdown.dispatchEvent(new Event('change'));
     });
-  });
-
-  // Check if user is logged in
-  if (!localStorageHasUserId()) {
-    saveSnipButton.textContent = "Log In";
   }
 
-  // Save Snippet Event
+  // Handle save snippet event
   saveSnipButton.addEventListener("click", () => {
     if (localStorageHasUserId()) {
       const title = nameInput.value;
@@ -94,15 +96,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const code = editor.getValue();
       const language = typeDropdown.value;
 
-      addSnippet(userId, title, description, code, language)
+      addSnippet(localStorageHasUserId(), title, description, code, language)
         .then((data) => {
           if (data.snippetExists) {
-            // TODO: Add a message that the snippet exists
             console.log(data.snippetExists);
           } else if (data.fieldsReguired) {
-            // TODO: Add a message that the inputs are empty
             console.log(data.fieldsReguired);
-          }else {
+          } else {
             clearInputs();
           }
         })
@@ -115,19 +115,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // On language type selected
+  // Update language type on dropdown change
   typeDropdown.addEventListener("change", (event) => {
     const option = event.target.value;
 
     languageTypeCodeBar.textContent = option;
     monaco.editor.setModelLanguage(editor.getModel(), option);
   });
-  
 
+  // Clear input fields
   function clearInputs() {
-    nameInput.value = '';
+    wrapWordsWithSpans("", nameInput);
+    wrapWordsWithSpans("", descriptionInput);
+
     typeDropdown.value = typeDropdown.options[0].value;
-    descriptionInput.value = '';
     editor.setValue('');
   }
 });

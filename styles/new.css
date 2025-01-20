@@ -132,16 +132,6 @@ body {
   gap: 5px;
 }
 
-textarea {
-  flex: 1;
-  padding: 10px;
-  background-color: #373737;
-  color: white;
-  resize: none;
-  margin-bottom: 10px;
-  overflow: auto;
-}
-
 .propertiesPanel {
   flex: 2;
   display: flex;
@@ -163,6 +153,10 @@ textarea {
   margin-left: 2px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.75);
+}
+
+.propertiesPanel button {
+  text-shadow: 0px 3px 10px #2525256b;
 }
 
 input, select, textarea {
@@ -203,15 +197,22 @@ button:hover {
   margin: 0;
 }
 
-#descriptionInput {
+#descriptionInput, #nameInput {
   flex: 1;
-  height: auto;
-  background-color: #373737; /* Match other inputs */
-  color: white; /* Text color */
-}
+  min-height: 40px;
+  background-color: #373737;
+  padding: 10px;
+  border-radius: 7px;
+  color: white;
 
-#messageLabel {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #9000FF; /* Message text color */
+  resize: none;
+  margin-bottom: 10px;
+  overflow: auto;
+
+  outline: none;
+  font-family: "Fredoka", serif;
+  font-size: 16px;
+  width: 100%;
+
+  border: none;
 }

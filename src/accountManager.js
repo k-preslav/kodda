@@ -80,7 +80,7 @@ export function localStorageHasUserId() {
   let userId = localStorage.getItem("userId");
 
   if (userId) {
-    return true;
+    return userId;
   }
   
   return false;

@@ -6,6 +6,7 @@
     <title>Kodda</title>
     
     <link rel="stylesheet" href="../styles/new.css"/>
+    <link rel="stylesheet" href="../styles/animations.css"/>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +31,7 @@
                 <p id="languageType">other</p>
                 <div class="zoomControl">
                     <button id="zoomOut">-</button>
-                    <p id="zoomLevel">100%</p>
+                    <p id="zoomLevel"></p>
                     <button id="zoomIn">+</button>
                 </div>
             </div>
@@ -39,10 +40,14 @@
         <div class="propertiesPanel">
             <div class="propBox">
                 <p>Name</p>
-                <input id="nameInput" autocomplete="off">
+                <div id="nameInput"></div>
+            </div>
+            <div class="propBox" id="descPropBox">
+                <p>Description</p>
+                <div id="descriptionInput"></div>
             </div>
             <div class="propBox">
-                <p>Type</p>
+                <p>Language</p>
                 <select id="typeDropdown">
                     <option value="other">-</option>
                     <option value="html">HTML</option>
@@ -51,11 +56,8 @@
                     <option value="c">C</option>
                     <option value="cpp">C++</option>
                     <option value="csharp">C#</option>
+                    <option value="python">Python</option>
                 </select>
-            </div>
-            <div class="propBox" id="descPropBox">
-                <p>Description</p>
-                <textarea id="descriptionInput"></textarea>
             </div>
             <button id="saveSnippetButton">Save Snippet</button>
         </div>

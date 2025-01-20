@@ -1,0 +1,12 @@
+.fade-in-word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(4px);
+}
+
+@keyframes fade-in {
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}

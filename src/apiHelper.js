@@ -60,7 +60,7 @@ export async function deleteSnippet(snippetId) {
 }
 
 
-export async function generateDescription(code) {
+export async function getTitleAndDescription(code) {
   const response = await fetch(`${API_BASE_URL}/genDesc`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
