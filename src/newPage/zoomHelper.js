@@ -1,6 +1,6 @@
 const DEFAULT_FONT_SIZE = 14; // Default font size if not set in localStorage
 const FONT_STEP = 4;
-const MIN_FONT_SIZE = 8;
+const MIN_FONT_SIZE = 10;
 
 let currentFontSize;
 let zoomLevel;

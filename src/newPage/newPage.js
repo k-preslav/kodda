@@ -1,6 +1,5 @@
 import { localStorageHasUserId } from "../accountManager";
 import { addSnippet, getCodeProperties } from "../apiHelper";
-import { detectLanguage } from "./languageDetect";
 import { wrapWordsWithSpans } from "./spanHelper";
 import { initializeZoomLevel } from "./zoomHelper";
 
@@ -86,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
               
               typeDropdown.value = data.language;
               languageTypeCodeBar.textContent = data.language;
+              monaco.editor.setModelLanguage(editor.getModel(), data.language);
             });
           } else {
             console.log("User is not logged in.");

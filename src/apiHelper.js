@@ -47,7 +47,8 @@ export async function addSnippet(userId, title, description, code, language = "P
 export async function fetchSnippets(userId) {
   const response = await fetch(`${API_BASE_URL}/snippets/${userId}`);
   const snippets = await response.json();
-  console.log(snippets);
+  
+  return snippets;
 }
 
 export async function deleteSnippet(snippetId) {
