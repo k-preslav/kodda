@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       minimap: { enabled: false },
       smoothScrolling: true,
       renderValidationDecorations: "off",
+      contextmenu: false
     });
 
     setupEditorEvents();
