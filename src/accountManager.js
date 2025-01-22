@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         messageLabel.textContent = data.notFound;
       }
       else if (data.invalidCredentials) {
-        messageLabel.textContent = data.invalidEmailPass;
+        messageLabel.textContent = data.invalidCredentials;
       }
       else if (data.fieldsReguired) {
         messageLabel.textContent = "All fields are required.";

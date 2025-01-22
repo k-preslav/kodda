@@ -56,6 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
       quickSuggestions: false,
       fontFamily: `"Source Code Pro", monospace`,
       minimap: { enabled: false },
+      smoothScrolling: true,
+      renderValidationDecorations: "off",
     });
 
     setupEditorEvents();

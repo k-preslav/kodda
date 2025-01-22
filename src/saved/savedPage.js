@@ -1,7 +1,12 @@
 import { localStorageHasUserId } from "../accountManager";
 import { fetchSnippets } from "../apiHelper";
 
+let loadingText, noSnippets;
+
 document.addEventListener("DOMContentLoaded", () => {
+  loadingText = document.getElementById("loadingText");
+  noSnippets = document.getElementById("noSnippets");
+
   displaySnippets();
 });
 
@@ -11,17 +16,19 @@ function displaySnippets() {
   if (userId) {
     fetchSnippets(userId).then((snippets) => {
       if (snippets.length === 0) {
-        document.getElementById("noSnippets").style.visibility = "visible";
-        return;
-      }
-
-      snippets.forEach((snip, index) => {
-        createSnippetPreview(snip.title, snip.description, snip._id, (previewElement) => {
-          setTimeout(() => showSnippet(previewElement), index * 45);
+        noSnippets.style.visibility = "visible";
+        loadingText.style.visibility = "hidden";
+      } else {
+        loadingText.style.visibility = "visible";
+  
+        snippets.forEach((snip, index) => {
+          createSnippetPreview(snip.title, snip.description, snip._id, (previewElement) => {
+            setTimeout(() => showSnippet(previewElement), index * 45 + 300);
+          });
         });
-      });
+      }
     });
-  } else document.getElementById("noSnippets").style.visibility = "visible";
+  } else noSnippets.style.visibility = "visible";
 }
 
 function createSnippetPreview(title, description, id, callback) {
@@ -53,6 +60,8 @@ function createSnippetPreview(title, description, id, callback) {
 
 
 function showSnippet(snip) {
+  loadingText.style.visibility = "hidden";
+
   snip.style.visibility = "visible";
   snip.style.animation = "fadeInSlideUp 0.65s ease-out forwards";
 

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kodda - View Saved</title>
 
+  <link rel="stylesheet" href="../styles/saved.css"/>
   <link rel="stylesheet" href="../styles/button.css"/>
   <link rel="stylesheet" href="../styles/navbar.css"/>
-  <link rel="stylesheet" href="../styles/saved.css"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,11 +29,15 @@
   <div class="saved-gallery">
   </div>
 
-  <div id="noSnippets">
+  <div id="noSnippets" class="centeredOnPage">
     <p>No snippets found</p>
     <a href="/pages/new.html">
       <button>Add your first snippet</button>
-    </a>    
+    </a>
+  </div>
+
+  <div id="loadingText" class="centeredOnPage">
+    <p>Loading...</p>
   </div>
 
   <script type="module" src="../src/saved/savedPage.js"></script>

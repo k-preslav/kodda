@@ -51,6 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
       quickSuggestions: false,
       fontFamily: `"Source Code Pro", monospace`,
       minimap: { enabled: false },
+      smoothScrolling: true,
+      renderValidationDecorations: "off",
     });
 
     setupEditorEvents();
@@ -91,11 +93,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function displayDataFromSnippet() {
     wrapWordsWithSpans(snipToEdit.title, nameInput);
     wrapWordsWithSpans(snipToEdit.description, descriptionInput);
-
-    typeDropdown.value = snipToEdit.language;
-    typeDropdown.dispatchEvent(new Event("change")); 
     
-    editor.setValue(snipToEdit.code);
+    typeDropdown.value = snipToEdit.language;
+    typeDropdown.dispatchEvent(new Event("change"));
+
+    editor.trigger('keyboard', 'type', {text: snipToEdit.code});
   }
 
   // Handle save snippet event
