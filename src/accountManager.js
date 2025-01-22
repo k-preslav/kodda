@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (data.notFound) {
         messageLabel.textContent = data.notFound;
       }
-      else if (data.invalidEmailPass) {
+      else if (data.invalidCredentials) {
         messageLabel.textContent = data.invalidEmailPass;
       }
       else if (data.fieldsReguired) {

@@ -44,6 +44,18 @@ export async function addSnippet(userId, title, description, code, language = "P
   return data;
 }
 
+export async function updateSnippet(snippetId, userId, title, description, code, language = "Plain Text") {
+  const response = await fetch(`${API_BASE_URL}/snippets/${snippetId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId, title, description, code, language })
+  });
+
+  const data = await response.json();
+  return data;
+}
+
+
 export async function fetchSnippets(userId) {
   const response = await fetch(`${API_BASE_URL}/snippets/${userId}`);
   const snippets = await response.json();
@@ -51,8 +63,15 @@ export async function fetchSnippets(userId) {
   return snippets;
 }
 
+export async function getSnippetById(snipId) {
+  const response = await fetch(`${API_BASE_URL}/snippet/${snipId}`);
+  const snippet = await response.json();
+  
+  return snippet;
+}
+
 export async function deleteSnippet(snippetId) {
-  const response = await fetch(`${API_BASE_URL}/snippets/${snippetId}`, {
+  const response = await fetch(`${API_BASE_URL}/snippets-del/${snippetId}`, {
     method: "DELETE"
   });
 

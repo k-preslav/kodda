@@ -16,7 +16,7 @@ function displaySnippets() {
       }
 
       snippets.forEach((snip, index) => {
-        createSnippetPreview(snip.title, snip.description, (previewElement) => {
+        createSnippetPreview(snip.title, snip.description, snip._id, (previewElement) => {
           setTimeout(() => showSnippet(previewElement), index * 45);
         });
       });
@@ -24,10 +24,8 @@ function displaySnippets() {
   } else document.getElementById("noSnippets").style.visibility = "visible";
 }
 
-function createSnippetPreview(title, description, callback) {
+function createSnippetPreview(title, description, id, callback) {
   const previewElement = document.createElement("saved-code-preview");
-
-  previewElement.style.visibility = "hidden";
 
   const titleSlot = document.createElement("span");
   titleSlot.setAttribute("slot", "title");
@@ -37,14 +35,22 @@ function createSnippetPreview(title, description, callback) {
   descriptionSlot.setAttribute("slot", "description");
   descriptionSlot.textContent = description;
 
+  const idSlot = document.createElement("span");
+  idSlot.setAttribute("slot", "id");
+  idSlot.textContent = id;
+
   previewElement.appendChild(titleSlot);
   previewElement.appendChild(descriptionSlot);
+  previewElement.appendChild(idSlot);
+
+  previewElement.addEventListener("click", () => onSnippetClick(previewElement));
 
   const galleryContainer = document.querySelector(".saved-gallery");
   galleryContainer.appendChild(previewElement);
 
   callback(previewElement);
 }
+
 
 function showSnippet(snip) {
   snip.style.visibility = "visible";
@@ -53,4 +59,9 @@ function showSnippet(snip) {
   setTimeout(() => {
     snip.style.animation = "";
   }, 650)
+}
+
+function onSnippetClick(snippet) {
+  const id = snippet.querySelector('[slot="id"]').textContent;
+  window.location.href = `../../pages/edit.html?id=${id}`;
 }

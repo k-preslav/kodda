@@ -9,3 +9,7 @@ export function wrapWordsWithSpans(text, inputElement) {
     inputElement.setAttribute("contenteditable", "true");
     inputElement.value = text;
 }
+
+export function getWordsFromSpans(inputElement) {
+  return inputElement.textContent || inputElement.innerText;
+}

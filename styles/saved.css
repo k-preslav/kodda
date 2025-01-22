@@ -35,6 +35,9 @@ saved-code-preview {
   flex-direction: column;
   justify-content: space-between;
 
+  visibility: hidden;
+  will-change: opacity, transform;
+
   min-width: 100%;
   max-width: 100%;
 

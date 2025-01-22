@@ -1,5 +1,5 @@
 import { localStorageHasUserId } from "../accountManager";
-import { addSnippet, getCodeProperties } from "../apiHelper";
+import { addSnippet, deleteSnippet, getSnippetById, updateSnippet } from "../apiHelper";
 import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper";
 import { initializeZoomLevel } from "../editor/zoomHelper";
 
@@ -8,17 +8,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const descriptionInput = document.getElementById("descriptionInput");
   const typeDropdown = document.getElementById("typeDropdown");
   const languageTypeCodeBar = document.getElementById("languageType");
+
   const saveSnipButton = document.getElementById("saveSnippetButton");
-  
-  const propertiesPanel = document.getElementById("propertiesPanel");
+  const deleteSnipButton = document.getElementById("deleteSnippetButton");
 
   let editor;
-
-  let propertiesReady = false;
-  let propertiesReadyPromiseResolve;
-  let propertiesReadyPromise = new Promise((resolve) => {
-    propertiesReadyPromiseResolve = resolve;
-  });
+  let snipToEdit;
 
   require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs' } });
 
@@ -60,7 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupEditorEvents();
     initializeZoomLevel(editor);
-    reset();
+
+    getSnippetToEdit();
 
     if (!localStorageHasUserId()) {
       saveSnipButton.textContent = "Log In";
@@ -69,53 +65,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Set up editor events
   function setupEditorEvents() {
-    let changeTimeout;
-
     editor.getModel().onDidChangeContent(() => {
       const text = editor.getValue();
 
-      reset(true);
-
-      languageTypeCodeBar.textContent = "other";
+      saveSnipButton.disabled = false;
+      saveSnipButton.textContent = "Update Snippet";
 
       if (text == '') {
           saveSnipButton.disabled = true;
       }
-
-      clearTimeout(changeTimeout);
-      changeTimeout = setTimeout(() => {
-        if (text) {
-          if (localStorageHasUserId()) {
-            wrapWordsWithSpans("Generating...", descriptionInput);            
-            languageTypeCodeBar.textContent = "...";
-
-            propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
-            propertiesPanel.style.opacity = 1;
-
-            getCodeProperties(text).then((data) => {
-              wrapWordsWithSpans(data.title, nameInput);
-              wrapWordsWithSpans(data.description, descriptionInput);
-              
-              typeDropdown.value = data.language;
-              languageTypeCodeBar.textContent = data.language;
-              monaco.editor.setModelLanguage(editor.getModel(), data.language);
-
-              // Wait for the description animation to finish
-              setTimeout(() => {
-                propertiesReady = true;
-                propertiesReadyPromiseResolve();
-
-                // Stop the glow animation
-                propertiesPanel.style.animation = "none";
-              }, data.description.split(' ').length * 15 + 750);
-            });
-          } else {
-            console.log("User is not logged in.");
-            wrapWordsWithSpans('To generate a description you must Log In.', descriptionInput);
-          }
-        }
-      }, 1650);
     });
+  }
+
+  function getSnippetToEdit() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    
+    getSnippetById(id).then((data) => {
+      snipToEdit = data;
+      displayDataFromSnippet();
+    });
+  }
+
+  // Displays the data from the snippet to the code editor and properties panel
+  function displayDataFromSnippet() {
+    wrapWordsWithSpans(snipToEdit.title, nameInput);
+    wrapWordsWithSpans(snipToEdit.description, descriptionInput);
+
+    typeDropdown.value = snipToEdit.language;
+    typeDropdown.dispatchEvent(new Event("change")); 
+    
+    editor.setValue(snipToEdit.code);
   }
 
   // Handle save snippet event
@@ -123,41 +103,52 @@ document.addEventListener("DOMContentLoaded", () => {
     saveSnipButton.disabled = true;
 
     if (localStorageHasUserId()) {
-      if (!propertiesReady) {
-        saveSnipButton.textContent = "Saving...";
-
-        propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
-        propertiesPanel.style.opacity = 1;
-
-        console.log("Waiting for properties to finish generating...");
-        
-        await propertiesReadyPromise;
-        console.log("Properties ready!");
-      }
+      saveSnipButton.textContent = "Saving...";
 
       const title = getWordsFromSpans(nameInput);
       const description = getWordsFromSpans(descriptionInput);
       const code = editor.getValue();
       const language = typeDropdown.value;
 
-      addSnippet(localStorageHasUserId(), title, description, code, language)
+      updateSnippet(snipToEdit._id, localStorageHasUserId(), title, description, code, language)
         .then((data) => {
           if (data.snippetExists) {
             console.log(data.snippetExists);
           } else if (data.fieldsReguired) {
             console.log(data.fieldsReguired);
           } else {
-            reset();
+            saveSnipButton.textContent = "Updated.";
+            saveSnipButton.disabled = true;
           }
         })
         .catch((err) => {
-          console.error("Error saving snippet:", err);
+          console.error("Error updating snippet:", err);
         });
     } else {
       console.log("User is not logged in.");
       window.location.href = "../index.html";
     }
   });
+
+  // Handle deletion
+  deleteSnipButton.addEventListener("click", async () => {
+    try {
+      const data = await deleteSnippet(snipToEdit._id);
+      
+      if (data && data.error) {
+        console.error(data.error);
+        return;
+      }
+  
+      setTimeout(() => {
+        window.location.href = "../../pages/saved.html";
+      }, 150);
+  
+    } catch (err) {
+      console.error("Error deleting snippet:", err);
+    }
+  });
+  
 
   // Update language type on dropdown change
   typeDropdown.addEventListener("change", (event) => {
@@ -166,24 +157,4 @@ document.addEventListener("DOMContentLoaded", () => {
     languageTypeCodeBar.textContent = option;
     monaco.editor.setModelLanguage(editor.getModel(), option);
   });
-
-  // Clear input fields
-  function reset(ignoreEditor=false) {
-    wrapWordsWithSpans("", nameInput);
-    wrapWordsWithSpans("", descriptionInput);
-
-    typeDropdown.value = "other";
-
-    saveSnipButton.textContent = "Save Snippet";
-    saveSnipButton.disabled = false;
-
-    propertiesReady = false;
-    propertiesReadyPromiseResolve = null;
-    propertiesReadyPromise = new Promise((resolve) => {
-      propertiesReadyPromiseResolve = resolve;
-    });
-
-    if (!ignoreEditor)
-      editor.setValue('');
-  }
 });
