@@ -18,17 +18,20 @@ body {
 
 .saved-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 15%);
-  
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   justify-content: center;
   justify-items: center;
 
-  gap: 20px;
-  padding: 25px 0px;
+  gap: 15px;
+  padding: 25px;
+}
+.saved-gallery:empty {
+  justify-items: center;
 }
 
 saved-code-preview {
   padding: 20px;
+
   background-color: #2D2D2D;
   border-radius: 10px;
   display: flex;
@@ -38,8 +41,8 @@ saved-code-preview {
   visibility: hidden;
   will-change: opacity, transform;
 
-  min-width: 100%;
-  max-width: 100%;
+  min-width: 275px;
+  max-width: 275px;
 
   min-height: 120px;
   max-height: 120px;
