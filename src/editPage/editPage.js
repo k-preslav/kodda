@@ -12,8 +12,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveSnipButton = document.getElementById("saveSnippetButton");
   const deleteSnipButton = document.getElementById("deleteSnippetButton");
 
+  const loadingText = document.getElementById("loadingText");
+
   let editor;
   let snipToEdit;
+
+  saveSnipButton.disabled = false;
+  saveSnipButton.textContent = "Update Snippet";
+
+  if (!localStorageHasUserId()) {
+    saveSnipButton.textContent = "Log In";
+  }
 
   require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs' } });
 
@@ -60,19 +69,12 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeZoomLevel(editor);
 
     getSnippetToEdit();
-
-    if (!localStorageHasUserId()) {
-      saveSnipButton.textContent = "Log In";
-    }
   });
 
   // Set up editor events
   function setupEditorEvents() {
     editor.getModel().onDidChangeContent(() => {
       const text = editor.getValue();
-
-      saveSnipButton.disabled = false;
-      saveSnipButton.textContent = "Update Snippet";
 
       if (text == '') {
           saveSnipButton.disabled = true;
@@ -83,10 +85,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function getSnippetToEdit() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
+
+    loadingText.style.visibility = "visible";
     
     getSnippetById(id).then((data) => {
       snipToEdit = data;
       displayDataFromSnippet();
+
+      loadingText.style.visibility = "hidden";
     });
   }
 
@@ -106,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     saveSnipButton.disabled = true;
 
     if (localStorageHasUserId()) {
+      saveSnipButton.classList.add("loading");
       saveSnipButton.textContent = "Saving...";
 
       const title = getWordsFromSpans(nameInput);
@@ -121,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(data.fieldsReguired);
           } else {
             saveSnipButton.textContent = "Updated.";
+            saveSnipButton.classList.remove("loading");
             saveSnipButton.disabled = true;
           }
         })

@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="../styles/navbar.css"/>
     <link rel="stylesheet" href="../styles/button.css"/>
     <link rel="stylesheet" href="../styles/animations.css"/>
+    <link rel="stylesheet" href="../styles/propBoxLabel.css"/>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs/editor/editor.main.min.css" />
 </head>
@@ -41,11 +43,21 @@
         </div>
         <div id="propertiesPanel">
             <div class="propBox">
-                <p>Name</p>
+                <p class="propBoxLabel">
+                    Name
+                    <button class="pinButton" id="pinNameButton">
+                        <i class="fas fa-thumbtack"></i>
+                    </button>
+                </p>
                 <div id="nameInput"></div>
             </div>
             <div class="propBox" id="descPropBox">
-                <p>Description</p>
+                <p class="propBoxLabel">
+                    Description
+                    <button class="pinButton" id="pinDescriptionButton">
+                        <i class="fas fa-thumbtack"></i>
+                    </button>
+                </p>
                 <div id="descriptionInput"></div>
             </div>
             <div class="propBox">

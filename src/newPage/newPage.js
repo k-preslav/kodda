@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const propertiesPanel = document.getElementById("propertiesPanel");
 
+  const pinButtons = document.querySelectorAll(".pinButton");
+  const pinButtonName = document.getElementById("pinNameButton");
+  const pinButtonDesc = document.getElementById("pinDescriptionButton");
+
   let editor;
 
   let propertiesReady = false;
@@ -76,28 +80,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     editor.getModel().onDidChangeContent(() => {
       const text = editor.getValue();
-
-      reset(true);
+      reset();
 
       languageTypeCodeBar.textContent = "other";
 
       if (text == '') {
           saveSnipButton.disabled = true;
+          reset(true);
       }
 
       clearTimeout(changeTimeout);
       changeTimeout = setTimeout(() => {
         if (text) {
           if (localStorageHasUserId()) {
-            wrapWordsWithSpans("Generating...", descriptionInput);            
+            if (!isPinned(pinButtonDesc))
+              wrapWordsWithSpans("Generating...", descriptionInput);            
             languageTypeCodeBar.textContent = "...";
 
             propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
             propertiesPanel.style.opacity = 1;
 
+            disablePinnedButtons();
+
             getCodeProperties(text).then((data) => {
-              wrapWordsWithSpans(data.title, nameInput);
-              wrapWordsWithSpans(data.description, descriptionInput);
+              enablePinnedButtons();
+
+              if (!isPinned(pinButtonName))
+                wrapWordsWithSpans(data.title, nameInput);
+
+              if (!isPinned(pinButtonDesc))
+                wrapWordsWithSpans(data.description, descriptionInput);
               
               typeDropdown.value = data.language;
               languageTypeCodeBar.textContent = data.language;
@@ -124,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle save snippet event
   saveSnipButton.addEventListener("click", async () => {
     saveSnipButton.disabled = true;
+    disablePinnedButtons();
 
     if (localStorageHasUserId()) {
       if (!propertiesReady) {
@@ -150,7 +163,8 @@ document.addEventListener("DOMContentLoaded", () => {
           } else if (data.fieldsReguired) {
             console.log(data.fieldsReguired);
           } else {
-            reset();
+            reset(true);
+            editor.setValue('');
           }
         })
         .catch((err) => {
@@ -162,6 +176,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  pinButtons.forEach(pinButn => {
+    pinButn.addEventListener("click", () => {
+      pinButn.classList.toggle('on');
+    });
+  });
+
   // Update language type on dropdown change
   typeDropdown.addEventListener("change", (event) => {
     const option = event.target.value;
@@ -171,9 +191,20 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Clear input fields
-  function reset(ignoreEditor=false) {
-    wrapWordsWithSpans("", nameInput);
-    wrapWordsWithSpans("", descriptionInput);
+  function reset(fullReset=false) {  
+    if (fullReset)
+    {
+      unpin(pinButtonName);
+      unpin(pinButtonDesc);
+    }
+    
+    if (!isPinned(pinButtonName))
+      wrapWordsWithSpans("", nameInput);
+    
+    if (!isPinned(pinButtonDesc))
+      wrapWordsWithSpans("", descriptionInput);
+
+    disablePinnedButtons();
 
     typeDropdown.value = "other";
 
@@ -185,8 +216,37 @@ document.addEventListener("DOMContentLoaded", () => {
     propertiesReadyPromise = new Promise((resolve) => {
       propertiesReadyPromiseResolve = resolve;
     });
+  }
 
-    if (!ignoreEditor)
-      editor.setValue('');
+  // Pin when manually inputing name or description
+  nameInput.addEventListener("input", () => {
+    pin(pinButtonName);
+  });
+  descriptionInput.addEventListener("input", () => {
+    pin(pinButtonDesc);
+  });
+  
+  function disablePinnedButtons() {
+    pinButtons.forEach((button) => {
+      button.disabled = true;
+    });
+  }
+  function enablePinnedButtons() {
+    pinButtons.forEach((button) => {
+      button.disabled = false;
+    });
+  }
+
+  function isPinned(button) {
+    if (button.classList.contains("on")) 
+      return true;
+
+    return false;
+  }
+  function pin(button) {
+    button.classList.add("on")
+  }
+  function unpin(button) {
+    button.classList.remove("on")
   }
 });

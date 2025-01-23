@@ -18,13 +18,14 @@ body {
 
 .saved-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
   justify-content: center;
   justify-items: center;
 
-  gap: 15px;
+  gap: 35px 0;
   padding: 25px;
 }
+
 .saved-gallery:empty {
   justify-items: center;
 }

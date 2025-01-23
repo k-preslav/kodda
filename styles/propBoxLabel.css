@@ -1,0 +1,42 @@
+.propBoxLabel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.pinButton i {
+  width: 16px;
+  height: 10px;
+}
+
+.pinButton {
+  width: 32px;  
+  height: 32px; 
+  padding: 0;
+  margin-left: 10px;
+
+  background-color: #373737;
+
+  color: rgba(255, 255, 255, 0.78);
+  font-family: "Fredoka", sans-serif;
+  cursor: pointer;
+  font-weight: 400;
+
+  transition: background-color 0.15s ease;
+}
+.pinButton:disabled {
+  background-color: rgb(49, 49, 49);
+  color: #969696a1;
+  
+  cursor: default;
+  box-shadow: none;
+}
+
+.pinButton:hover {
+  background-color: #434343;
+}
+
+.pinButton.on {
+  background-color: #6800ad;
+}
