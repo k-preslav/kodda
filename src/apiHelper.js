@@ -79,7 +79,6 @@ export async function deleteSnippet(snippetId) {
   console.log(data);
 }
 
-
 export async function getCodeProperties(code) {
   const response = await fetch(`${API_BASE_URL}/genProp`, {
     method: "POST",

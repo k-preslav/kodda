@@ -7,14 +7,18 @@ class SavedCodePreview extends HTMLElement {
   connectedCallback() {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '../styles/saved.css';
+    link.href = '../styles/saved.css'; // Ensure this path is correct
     this.shadowRoot.appendChild(link);
 
+    this.render();
+  }
+
+  render() {
     this.shadowRoot.innerHTML += `
       <div>
-        <h1><slot name="title"></slot></h1>
-        <p><slot name="description"></slot></p>
-        <span slot="id" style="display:none;"></span>
+        <p id="title_p"><slot name="title"></slot></p>
+        <p id="description_p"><slot name="description"></slot></p>
+        <span slot="id" style="display:none;">${this.getAttribute('id')}</span>
       </div>
     `;
   }

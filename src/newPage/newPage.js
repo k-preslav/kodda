@@ -1,4 +1,4 @@
-import { localStorageHasUserId } from "../accountManager";
+import { getUserIdFromLocalStorage } from "../accountManager";
 import { addSnippet, getCodeProperties } from "../apiHelper";
 import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper";
 import { initializeZoomLevel } from "../editor/zoomHelper";
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeZoomLevel(editor);
     reset();
 
-    if (!localStorageHasUserId()) {
+    if (!getUserIdFromLocalStorage()) {
       saveSnipButton.textContent = "Log In";
     }
   });
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(changeTimeout);
       changeTimeout = setTimeout(() => {
         if (text) {
-          if (localStorageHasUserId()) {
+          if (getUserIdFromLocalStorage()) {
             if (!isPinned(pinButtonDesc))
               wrapWordsWithSpans("Generating...", descriptionInput);            
             languageTypeCodeBar.textContent = "...";
@@ -138,8 +138,10 @@ document.addEventListener("DOMContentLoaded", () => {
     saveSnipButton.disabled = true;
     disablePinnedButtons();
 
-    if (localStorageHasUserId()) {
-      if (!propertiesReady) {
+    const code = editor.getValue();
+
+    if (getUserIdFromLocalStorage()) {
+      if (!propertiesReady && code !== '') {
         saveSnipButton.textContent = "Saving...";
 
         propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
@@ -153,15 +155,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const title = getWordsFromSpans(nameInput);
       const description = getWordsFromSpans(descriptionInput);
-      const code = editor.getValue();
       const language = typeDropdown.value;
 
-      addSnippet(localStorageHasUserId(), title, description, code, language)
+      console.log(description);
+
+      addSnippet(getUserIdFromLocalStorage(), title, description, code, language)
         .then((data) => {
           if (data.snippetExists) {
-            console.log(data.snippetExists);
+            alert(data.snippetExists);
+            saveSnipButton.textContent = "Save Snippet";
           } else if (data.fieldsReguired) {
-            console.log(data.fieldsReguired);
+            alert(data.fieldsReguired);
+            enablePinnedButtons();
+            saveSnipButton.textContent = "Save Snippet";
           } else {
             reset(true);
             editor.setValue('');
@@ -221,9 +227,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Pin when manually inputing name or description
   nameInput.addEventListener("input", () => {
     pin(pinButtonName);
+    saveSnipButton.disabled = false;
   });
   descriptionInput.addEventListener("input", () => {
     pin(pinButtonDesc);
+    saveSnipButton.disabled = false;
   });
   
   function disablePinnedButtons() {

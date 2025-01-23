@@ -11,5 +11,5 @@ export function wrapWordsWithSpans(text, inputElement) {
 }
 
 export function getWordsFromSpans(inputElement) {
-  return inputElement.textContent || inputElement.innerText;
+  return inputElement.textContent.trim() || inputElement.innerText.trim();
 }

@@ -5,20 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kodda - View Saved</title>
 
-  <link rel="stylesheet" href="../styles/saved.css"/>
   <link rel="stylesheet" href="../styles/button.css"/>
   <link rel="stylesheet" href="../styles/navbar.css"/>
+  <link rel="stylesheet" href="../styles/saved.css"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300..700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
   <!-- Navbar -->
   <div class="navBar">
     <h1 class="title">kodda</h1>
+    <div class="searchBox">
+      <input id="searchInput" placeholder="Search" autocomplete="off">
+      <button id="searchButton">
+        <i class="fas fa-magnifying-glass"></i>
+      </button>
+    </div>
     <div class="navBarRight">
       <a href="/pages/new.html">New</a>
       <a href="/pages/saved.html" class="active">Saved</a>
@@ -29,7 +37,7 @@
   <div class="saved-gallery">
   </div>
 
-  <div id="noSnippets" class="centeredOnPage">
+  <div id="noAccountSnippets" class="centeredOnPage">
     <p>No snippets found</p>
     <a href="/pages/new.html">
       <button>Add your first snippet</button>
@@ -38,6 +46,10 @@
 
   <div id="loadingText" class="centeredOnPage">
     <p>Loading...</p>
+  </div>
+
+  <div id="noSearchSnippets" class="centeredOnPage">
+    <p>No results</p>
   </div>
 
   <script type="module" src="../src/saved/savedPage.js"></script>

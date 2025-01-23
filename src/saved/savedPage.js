@@ -1,37 +1,95 @@
-import { localStorageHasUserId } from "../accountManager";
+import { getUserIdFromLocalStorage } from "../accountManager";
 import { fetchSnippets } from "../apiHelper";
+import { searchSnippets } from "./search";
 
-let loadingText, noSnippets;
+let galleryContainer;
+let loadingText, noAccountSnippets, noSearchSnippets;
+let searchInput, searchButton;
 
 document.addEventListener("DOMContentLoaded", () => {
+  galleryContainer = document.querySelector(".saved-gallery");
+
   loadingText = document.getElementById("loadingText");
-  noSnippets = document.getElementById("noSnippets");
+  noAccountSnippets = document.getElementById("noAccountSnippets");
+  noSearchSnippets = document.getElementById("noSearchSnippets");
 
   displaySnippets();
+
+  searchInput = document.getElementById("searchInput");
+  searchButton = document.getElementById("searchButton");
+
+  searchButton.addEventListener("click", () => {
+    search();
+  });
+  searchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      search();
+    }
+  });
 });
 
-function displaySnippets() {
-  const userId = localStorageHasUserId();
-  
-  if (userId) {
-    fetchSnippets(userId).then((snippets) => {
-      if (snippets.length === 0) {
-        noSnippets.style.visibility = "visible";
-        loadingText.style.visibility = "hidden";
-      } else {
-        loadingText.style.visibility = "visible";
-  
-        snippets.forEach((snip, index) => {
-          createSnippetPreview(snip.title, snip.description, snip._id, (previewElement) => {
-            setTimeout(() => showSnippet(previewElement), index * 45 + 300);
-          });
-        });
-      }
-    });
-  } else noSnippets.style.visibility = "visible";
+function clearGallery() {
+  galleryContainer.innerHTML = '';
 }
 
-function createSnippetPreview(title, description, id, callback) {
+function search() {
+  if (searchInput.value !== '') {
+    searchSnippets(searchInput.value).then((snippets) => {
+      if (snippets.length > 0) {
+        noSearchSnippets.style.visibility = "hidden";
+        displaySnippets(snippets);
+      } else {
+        noSearchSnippets.style.visibility = "visible";
+        clearGallery();
+      }
+    });
+  } else {
+    noSearchSnippets.style.visibility = "hidden";
+    displaySnippets();
+  }
+}
+
+function displaySnippets(snippets) {
+  clearGallery();
+
+  const userId = getUserIdFromLocalStorage();
+  
+  if (userId) {
+    if (!snippets) {
+      fetchSnippets(userId).then((snippets) => {
+        if (snippets.length === 0) {
+          noAccountSnippets.style.visibility = "visible";
+          loadingText.style.visibility = "hidden";
+        } else {
+          loadingText.style.visibility = "visible";
+          noAccountSnippets.style.visibility = "hidden";
+        }
+
+        createSnippets(snippets, 300);
+      });
+    } else {
+      createSnippets(snippets, 300);
+    }
+  } else {
+    noAccountSnippets.style.visibility = "visible";
+  }
+}
+
+function createSnippets(snippets) {
+  let snipElements = []
+
+  snippets.forEach((snip) => {
+    snipElements.push(createSnippetPreview(snip.title, snip.description, snip._id));
+  });
+
+  snipElements.forEach((element, index) => {
+    setTimeout(() => {
+      showSnippet(element)
+    }, index * 40 + 600);
+  });
+}
+
+function createSnippetPreview(title, description, id) {
   const previewElement = document.createElement("saved-code-preview");
 
   const titleSlot = document.createElement("span");
@@ -52,10 +110,8 @@ function createSnippetPreview(title, description, id, callback) {
 
   previewElement.addEventListener("click", () => onSnippetClick(previewElement));
 
-  const galleryContainer = document.querySelector(".saved-gallery");
   galleryContainer.appendChild(previewElement);
-
-  callback(previewElement);
+  return previewElement;
 }
 
 

@@ -1,4 +1,4 @@
-import { localStorageHasUserId } from "../accountManager";
+import { getUserIdFromLocalStorage } from "../accountManager";
 import { addSnippet, deleteSnippet, getSnippetById, updateSnippet } from "../apiHelper";
 import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper";
 import { initializeZoomLevel } from "../editor/zoomHelper";
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   saveSnipButton.disabled = false;
   saveSnipButton.textContent = "Update Snippet";
 
-  if (!localStorageHasUserId()) {
+  if (!getUserIdFromLocalStorage()) {
     saveSnipButton.textContent = "Log In";
   }
 
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
   saveSnipButton.addEventListener("click", async () => {
     saveSnipButton.disabled = true;
 
-    if (localStorageHasUserId()) {
+    if (getUserIdFromLocalStorage()) {
       saveSnipButton.classList.add("loading");
       saveSnipButton.textContent = "Saving...";
 
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const code = editor.getValue();
       const language = typeDropdown.value;
 
-      updateSnippet(snipToEdit._id, localStorageHasUserId(), title, description, code, language)
+      updateSnippet(snipToEdit._id, getUserIdFromLocalStorage(), title, description, code, language)
         .then((data) => {
           if (data.snippetExists) {
             console.log(data.snippetExists);

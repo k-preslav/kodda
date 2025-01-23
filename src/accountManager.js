@@ -76,7 +76,7 @@ export async function autoLogin() {
   return false;
 }
 
-export function localStorageHasUserId() {
+export function getUserIdFromLocalStorage() {
   let userId = localStorage.getItem("userId");
 
   if (userId) {

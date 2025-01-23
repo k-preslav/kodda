@@ -60,7 +60,7 @@ saved-code-preview:hover {
   cursor: pointer;
 }
 
-h1 {
+#title_p {
   font-size: 18px;
   margin-bottom: 10px;
   font-weight: 600;
@@ -69,7 +69,7 @@ h1 {
   white-space: nowrap;
 }
 
-p {
+#description_p {
   font-size: 14px;
   color: #aaa;
 
@@ -81,6 +81,46 @@ p {
   text-overflow: ellipsis;
 
   margin-top: 10px;
+}
+
+.searchBox {
+  min-width: 30%;
+  display: flex;
+  flex-direction: row;
+  gap: 1px;
+}
+.searchBox input {
+  min-width: 90%;
+  padding: 10px;
+
+  background-color: #373737;
+  color: white;
+  
+  box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.20);
+  
+  outline: none;
+  border: none;
+  border-radius: 10px 0 0 10px;
+
+  font-family: "Fredoka", serif;
+  font-size: 16px;
+}
+.searchBox button {
+  width: 42px;
+  padding: 0;
+
+  border-radius: 0 10px 10px 0;
+  background-color: #373737;
+  box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.20);
+}
+
+.searchBox button i {
+  box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.15);
+  padding-right: 2px;
+}
+
+.searchBox button:hover {
+  background-color: #434343;
 }
 
 .centeredOnPage {
