@@ -192,7 +192,7 @@ saved-code-preview:hover {
 
   animation: fadeInSlideUp 0.4s ease forwards;
   animation-delay: 0.1s;
-  opacity: 0;
+  opacity: 0.4;
 }
 
 @keyframes fadeInSlideUp {

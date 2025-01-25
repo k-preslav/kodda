@@ -2,6 +2,7 @@ import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
 import { addSnippet, getCodeProperties } from "../apiHelper.js";
 import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper.js";
 import { initializeZoomLevel } from "../editor/zoomHelper.js";
+import { attachDragLeave, attachDragOver, attachOnDrop } from "./dragDrop.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const nameInput = document.getElementById("nameInput");
@@ -15,6 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const pinButtons = document.querySelectorAll(".pinButton");
   const pinButtonName = document.getElementById("pinNameButton");
   const pinButtonDesc = document.getElementById("pinDescriptionButton");
+
+  const editorContainer = document.getElementById('editor');
 
   let editor;
 
@@ -52,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    editor = monaco.editor.create(document.getElementById('editor'), {
+    editor = monaco.editor.create(editorContainer, {
       value: '',
       language: 'javascript',
       theme: 'kodda-theme',
@@ -62,11 +65,16 @@ document.addEventListener("DOMContentLoaded", () => {
       minimap: { enabled: false },
       smoothScrolling: true,
       renderValidationDecorations: "off",
-      contextmenu: false
+      contextmenu: false,
     });
 
     setupEditorEvents();
     initializeZoomLevel(editor);
+    
+    attachDragOver(editorContainer);
+    attachDragLeave(editorContainer);
+    attachOnDrop(editorContainer, editor);
+
     reset();
 
     if (!getUserIdFromLocalStorage()) {

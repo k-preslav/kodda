@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     typeDropdown.value = snipToEdit.language;
     typeDropdown.dispatchEvent(new Event("change"));
 
-    editor.trigger('keyboard', 'type', {text: snipToEdit.code});
+    editor.setValue(snipToEdit.code);
   }
 
   // Handle save snippet event

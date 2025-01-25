@@ -5,7 +5,7 @@ p.loading {
   background-clip: text;
   -webkit-background-clip: text;
   text-align: center;
-  animation: shine 6s ease-in-out infinite;
+  animation: shine 3s ease-in-out infinite;
 }
 
 @keyframes shine {
