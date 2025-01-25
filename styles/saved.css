@@ -37,7 +37,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .saved-gallery {
@@ -80,7 +80,41 @@ saved-code-preview {
 saved-code-preview:hover {
   transform: scale(1.03);
   box-shadow: 0px 0px 16px #720eb4;
+}
 
+#titleSlot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#titleSlot #title_p {
+  margin: 0;
+  width: 95%;
+}
+#titleSlot #copyButton {
+  background-color: #373737;
+  color: white;
+  width: 42px;
+  height: 39px;
+  padding: 0;
+  margin: 0;
+  border-radius: 10px;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background-color 0.15s ease-in;
+}
+
+#titleSlot #copyButton i {
+  font-size: 16px;
+}
+
+#titleSlot #copyButton:hover {
+  background-color: #434343;
   cursor: pointer;
 }
 
@@ -108,16 +142,22 @@ saved-code-preview:hover {
 }
 .searchBox button {
   width: 42px;
+  height: 42px;
   padding: 0;
 
   border-radius: 0 10px 10px 0;
   background-color: #373737;
-  box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.20);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.20);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .searchBox button i {
-  box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.15);
-  padding-right: 2px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  font-size: 18px;
+  padding-right: 0;
 }
 
 .searchBox button:hover {

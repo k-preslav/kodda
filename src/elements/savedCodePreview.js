@@ -5,10 +5,15 @@ class SavedCodePreview extends HTMLElement {
   }
 
   connectedCallback() {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = '../styles/saved.css'; // Ensure this path is correct
-    this.shadowRoot.appendChild(link);
+    const styleLink = document.createElement('link');
+    styleLink.rel = 'stylesheet';
+    styleLink.href = '../styles/saved.css';
+    this.shadowRoot.appendChild(styleLink);
+
+    const iconLink = document.createElement('link');
+    iconLink.rel = 'stylesheet';
+    iconLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+    this.shadowRoot.appendChild(iconLink);
 
     this.render();
   }
@@ -16,7 +21,12 @@ class SavedCodePreview extends HTMLElement {
   render() {
     this.shadowRoot.innerHTML += `
       <div>
-        <p id="title_p"><slot name="title"></slot></p>
+        <div id="titleSlot">
+          <p id="title_p"><slot name="title"></slot></p>
+          <button id="copyButton">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
         <p id="description_p"><slot name="description"></slot></p>
         <span slot="id" style="display:none;">${this.getAttribute('id')}</span>
       </div>

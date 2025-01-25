@@ -1,5 +1,5 @@
 import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
-import { fetchSnippets } from "../apiHelper.js";
+import { fetchSnippets, getSnippetById } from "../apiHelper.js";
 import { searchSnippets } from "./search.js";
 
 let galleryContainer;
@@ -55,14 +55,14 @@ function displaySnippets(snippets) {
   const userId = getUserIdFromLocalStorage();
   
   if (userId) {
+    loadingText.style.visibility = "visible";
+    noAccountSnippets.style.visibility = "hidden";
+
     if (!snippets) {
       fetchSnippets(userId).then((snippets) => {
         if (snippets.length === 0) {
           noAccountSnippets.style.visibility = "visible";
           loadingText.style.visibility = "hidden";
-        } else {
-          loadingText.style.visibility = "visible";
-          noAccountSnippets.style.visibility = "hidden";
         }
 
         createSnippets(snippets, 300);
@@ -88,10 +88,10 @@ function createSnippets(snippets) {
     }, index * 40 + 600);
   });
 }
-
 function createSnippetPreview(title, description, id) {
   const previewElement = document.createElement("saved-code-preview");
 
+  // Create slots for title, description, and ID
   const titleSlot = document.createElement("span");
   titleSlot.setAttribute("slot", "title");
   titleSlot.textContent = title;
@@ -111,9 +111,44 @@ function createSnippetPreview(title, description, id) {
   previewElement.addEventListener("click", () => onSnippetClick(previewElement));
 
   galleryContainer.appendChild(previewElement);
+  const copyButton = previewElement.shadowRoot.querySelector("#copyButton");
+  if (copyButton) {
+    copyButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+  
+      const snippetIdSlot = previewElement.querySelector('span[slot="id"]');
+      const snippetId = snippetIdSlot ? snippetIdSlot.textContent : null;
+  
+      if (snippetId) {
+        getSnippetById(snippetId)
+          .then((data) => {
+            const code = data.code;
+            if (code) {
+              navigator.clipboard.writeText(code).then(() => {
+                const icon = copyButton.querySelector("i");
+                if (icon) {
+                  icon.classList.remove("fa-copy");
+                  icon.classList.add("fa-check");
+                }
+  
+                setTimeout(() => {
+                  if (icon) {
+                    icon.classList.remove("fa-check");
+                    icon.classList.add("fa-copy");
+                  }
+                }, 1000);
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching snippet:", error);
+          });
+      }
+    });
+  }  
+
   return previewElement;
 }
-
 
 function showSnippet(snip) {
   loadingText.style.visibility = "hidden";

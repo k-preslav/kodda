@@ -10,13 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerButton = document.getElementById("registerButton");
   const buttonText = document.getElementById("buttonText");
   const successIcon = document.getElementById("successIcon");
-  successIcon.style.display = "none";
-
   const registerSwitch = document.getElementById("registerSwitch");
-
+  
   const messageLabel = document.getElementById("messageLabel");
-  messageLabel.style.display = "none";
-
   const signTitle = document.getElementById("signTitle");
   
   registerButton?.addEventListener("click", () => {
@@ -157,7 +153,7 @@ export async function autoLogin() {
     } 
     catch (error) { 
       console.error("Error:", error.message); 
-      return false; 
+      return "error"; 
     } 
   }  
   return false; 

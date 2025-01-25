@@ -91,6 +91,10 @@ input:focus {
   display: none;
 }
 
+#successIcon {
+  display: none;
+}
+
 .input-container {
   display: flex;
   flex-direction: column;
