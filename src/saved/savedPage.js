@@ -1,6 +1,6 @@
-import { getUserIdFromLocalStorage } from "../accountManager";
-import { fetchSnippets } from "../apiHelper";
-import { searchSnippets } from "./search";
+import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
+import { fetchSnippets } from "../apiHelper.js";
+import { searchSnippets } from "./search.js";
 
 let galleryContainer;
 let loadingText, noAccountSnippets, noSearchSnippets;

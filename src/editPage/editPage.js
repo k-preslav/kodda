@@ -1,7 +1,7 @@
-import { getUserIdFromLocalStorage } from "../accountManager";
-import { addSnippet, deleteSnippet, getSnippetById, updateSnippet } from "../apiHelper";
-import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper";
-import { initializeZoomLevel } from "../editor/zoomHelper";
+import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
+import { deleteSnippet, getSnippetById, updateSnippet } from "../apiHelper.js";
+import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper.js";
+import { initializeZoomLevel } from "../editor/zoomHelper.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const nameInput = document.getElementById("nameInput");

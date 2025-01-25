@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "https://kodda-api.loophole.site";
 
 export async function registerUser(username, email, passwordHash) {
   const response = await fetch(`${API_BASE_URL}/register`, {
@@ -11,11 +11,11 @@ export async function registerUser(username, email, passwordHash) {
   return data;
 }
 
-export async function loginUser(username, email, password) {
+export async function loginUser(email, password) {
   const response = await fetch(`${API_BASE_URL}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, email, password })
+    body: JSON.stringify({ email, password })
   });
 
   const data = await response.json();

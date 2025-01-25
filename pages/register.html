@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kodda - Register</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link rel="stylesheet" href="../styles/register.css">
+  <link rel="stylesheet" href="../styles/button.css">
+  <link rel="stylesheet" href="../styles/animations.css">
+</head>
+<body>
+  <div id="signPanel">
+    <h2 id="signTitle">Create a new account</h2>
+
+    <div id="signInputs">
+      <input id="usernameInput" placeholder="Name" type="text">
+      <input id="emailInput" placeholder="Email" type="email" required>
+      <input id="passwordInput" placeholder="Password" type="password" required>
+    </div>
+
+    <div id="controls">
+      <a id="registerSwitch">Already have an account?</a>
+      <button id="registerButton">
+        <span id="buttonText">Sign Up</span>
+        <i id="successIcon" class="fas fa-check"></i>
+      </button>      
+    </div>
+    <p id="messageLabel"></p>
+  </div>
+
+  <script type="module" src="../src/registerPage/registerPage.js"></script>
+</body>
+</html>

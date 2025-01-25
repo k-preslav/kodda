@@ -1,5 +1,5 @@
-import { getUserIdFromLocalStorage } from "../accountManager";
-import { fetchSnippets } from "../apiHelper";
+import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
+import { fetchSnippets } from "../apiHelper.js";
 
 export function searchSnippets(query) {
   let found = [];

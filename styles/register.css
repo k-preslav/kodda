@@ -1,0 +1,107 @@
+* {
+  font-family: "Fredoka", serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-color: #252525;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#signPanel {
+  margin-top: 10%;
+  background-color: #2D2D2D;
+  padding: 20px;
+  gap: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 350px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  animation: 0.35s slideIn ease-in-out;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  text-align: center;
+  margin: 10px;
+  text-shadow: 0px 4px 6px #00000049;
+}
+
+#signInputs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+}
+
+input {
+  background-color: #373737;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 7px;
+  outline: none;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.15);
+}
+input:focus {
+  background-color: #4A4A4A;
+}
+
+#controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+#controls button {
+  width: 125px;
+}
+
+#registerSwitch {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #ffffff4f;
+  font-size: 14px;
+  text-shadow: 0px 4px 10px #25252585;
+}
+
+#messageLabel {
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  color: #FF5733;
+  margin: 0;
+  padding: 0;
+  display: none;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.input-container input {
+  transition: all 0.3s ease;
+}
+
+.input-container input:focus {
+  border-color: #FF5733;
+  box-shadow: 0 0 5px rgba(255, 87, 51, 0.5);
+}
