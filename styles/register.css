@@ -27,7 +27,7 @@ body {
   background-size: 100% 100%;
   z-index: -1;
   
-  animation: animateColors 60s infinite linear;
+  animation: animateColors 75s infinite linear;
 }
 
 @keyframes animateColors {
