@@ -14,8 +14,32 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  position: relative;
 }
 
+#background {
+  position: fixed;
+  top: -120%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: conic-gradient(from 0deg, #9000FF, #3300aa, #9000FF);
+  background-size: 100% 100%;
+  z-index: -1;
+  
+  animation: animateColors 60s infinite linear;
+}
+
+@keyframes animateColors {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sign panel styling */
 #signPanel {
   margin-top: 10%;
   background-color: #2D2D2D;
@@ -28,7 +52,18 @@ body {
   width: 350px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
-  animation: 0.35s slideIn ease-in-out;
+}
+
+/* Keyframes for sliding in animation */
+@keyframes slideIn {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 h2 {
@@ -54,9 +89,10 @@ input {
   border-radius: 7px;
   outline: none;
   font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.15);
 }
+
 input:focus {
   background-color: #4A4A4A;
 }

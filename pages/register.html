@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <base href="/">      
+  <base href="/">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,15 +15,16 @@
   <link rel="stylesheet" href="../styles/animations.css">
 </head>
 <body>
+  <div id="background"></div>
   <div id="signPanel">
     <h2 id="signTitle">Create a new account</h2>
-
+    
     <div id="signInputs">
       <input id="usernameInput" placeholder="Name" type="text" autocomplete="off">
       <input id="emailInput" placeholder="Email" type="email" required autocomplete="off">
       <input id="passwordInput" placeholder="Password" type="password" required autocomplete="off">
     </div>
-
+    
     <div id="controls">
       <a id="registerSwitch">Already have an account?</a>
       <button id="registerButton">
@@ -33,7 +34,7 @@
     </div>
     <p id="messageLabel"></p>
   </div>
-
+  
   <script type="module" src="../src/registerPage/registerPage.js"></script>
 </body>
 </html>
