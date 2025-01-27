@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     typeDropdown.value = "other";
 
-    saveSnipButton.textContent = "Save Snippet";
+    saveSnipButton.textContent = getUserIdFromLocalStorage() ? "Save Snippet" : "Log In";
     saveSnipButton.disabled = false;
 
     propertiesReady = false;

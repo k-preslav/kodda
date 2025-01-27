@@ -13,10 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
   noAccountSnippets = document.getElementById("noAccountSnippets");
   noSearchSnippets = document.getElementById("noSearchSnippets");
 
-  displaySnippets();
-
-  searchInput = document.getElementById("searchInput");
   searchButton = document.getElementById("searchButton");
+  searchInput = document.getElementById("searchInput");
+  searchInput.focus();
+
+  displaySnippets();
 
   searchButton.addEventListener("click", () => {
     search();

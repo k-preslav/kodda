@@ -76,6 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
     editor.getModel().onDidChangeContent(() => {
       const text = editor.getValue();
 
+      saveSnipButton.disabled = false;
+      saveSnipButton.textContent = "Update Snippet";
+
       if (text == '') {
           saveSnipButton.disabled = true;
       }
@@ -165,7 +168,18 @@ document.addEventListener("DOMContentLoaded", () => {
   typeDropdown.addEventListener("change", (event) => {
     const option = event.target.value;
 
+    saveSnipButton.disabled = false;
+    saveSnipButton.textContent = "Update Snippet";
+
     languageTypeCodeBar.textContent = option;
     monaco.editor.setModelLanguage(editor.getModel(), option);
+  });
+  nameInput.addEventListener("input", () => {
+    saveSnipButton.disabled = false;
+    saveSnipButton.textContent = "Update Snippet";
+  });
+  descriptionInput.addEventListener("input", () => {
+    saveSnipButton.disabled = false;
+    saveSnipButton.textContent = "Update Snippet";
   });
 });

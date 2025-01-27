@@ -6,7 +6,7 @@ export function searchSnippets(query) {
 
   return fetchSnippets(getUserIdFromLocalStorage()).then((snippets) => {
     query = query.toLowerCase();
-    const queryWords = query.split(/\s+/);  // Split the query into words based on spaces
+    const queryWords = splitQuerry(query);
 
     // Check if snippets are empty or if the fetch failed
     if (!snippets || snippets.length === 0) {
@@ -21,11 +21,15 @@ export function searchSnippets(query) {
 
       const queryLang = getLanguageFromQuerry(query).toLowerCase();
 
-      const titleWords = title.split(/\s+/);
-      const descriptionWords = description.split(/\s+/);
+      const titleWords = splitQuerry(title);
+      const descriptionWords = splitQuerry(description);
 
-      let titleMatch = queryWords.some(word => titleWords.includes(word));
-      let descriptionMatch = queryWords.some(word => descriptionWords.includes(word));
+      let titleMatch = queryWords.some(queryWord => 
+        titleWords.some(titleWord => titleWord.includes(queryWord))
+      );
+      let descriptionMatch = queryWords.some(queryWord => 
+        descriptionWords.some(descriptionWord => descriptionWord.includes(queryWord))
+      );
       let langMatch = queryLang.includes(lang);
 
       if (titleMatch || descriptionMatch || langMatch) {
@@ -48,6 +52,10 @@ export function getLanguageFromQuerry(querry) {
   }
 
   return "";
+}
+
+function splitQuerry(querry) {
+  return querry.split(/[\s,.:;|&]+/).filter(word => word.length > 0);
 }
 
 const languageMatches = {
