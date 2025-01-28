@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const messageLabel = document.getElementById("messageLabel");
   const signTitle = document.getElementById("signTitle");
+  const loadingSpinner = document.getElementById("loadingSpinner");
   
   registerButton?.addEventListener("click", () => {
     if (registerType === "sign-up") register();
@@ -65,15 +66,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 300);
   }
   
+  function showLoading() {
+    buttonText.style.display = "none";
+    successIcon.style.display = "none";
+    loadingSpinner.style.display = "inline-block";
+  }
+
+  function hideLoading() {
+    loadingSpinner.style.display = "none";
+  }
+
   function register() {
+    showLoading();
     registerUser(usernameInput.value, emailInput.value, passwordInput.value).then((data) => {
+      hideLoading();
       messageLabel.style.display = "block";
       
       if (data.userId) {
         localStorage.setItem('userId', data.userId);
-
         messageLabel.style.display = "none";
-
         buttonText.style.display = "none"; 
         successIcon.style.display = "inline";
 
@@ -82,11 +93,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 600);
       }
       else if (data.userExists) {
+        buttonText.style.display = "inline";
         messageLabel.textContent = "A user with this email already exists.";
       }
       else if (data.fieldsRequired) {
+        buttonText.style.display = "inline";
         messageLabel.textContent = "All fields are required.";
       } else {
+        buttonText.style.display = "inline";
         messageLabel.textContent = "An unexpected error occurred. Please try again.";
       }
 
@@ -99,14 +113,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   function login() {
+    showLoading();
     loginUser(emailInput.value, passwordInput.value).then((data) => {
+      hideLoading();
       messageLabel.style.display = "block";
       
       if (data.userId) {
         localStorage.setItem('userId', data.userId);
-
         messageLabel.style.display = "none";
-
         buttonText.style.display = "none";
         successIcon.style.display = "inline";
 
@@ -118,14 +132,17 @@ document.addEventListener("DOMContentLoaded", () => {
         messageLabel.textContent = data.notFound;
       }
       else if (data.invalidCredentials) {
+        buttonText.style.display = "inline";
         messageLabel.textContent = data.invalidCredentials;
       }
       else if (data.fieldsRequired) {
+        buttonText.style.display = "inline";
         messageLabel.textContent = "All fields are required.";
       } else {
+        buttonText.style.display = "inline";
         messageLabel.textContent = "An unexpected error occurred. Please try again.";
       }
-
+      
       registerButton.disabled = false;
 
       setTimeout(() => {

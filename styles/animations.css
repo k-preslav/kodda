@@ -23,11 +23,11 @@
 
 @keyframes slideIn {
   from {
-    transform: translateY(-20px);
+    translate: 0 -20px;
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    translate: 0 0;
     opacity: 1;
   }
 }

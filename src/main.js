@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (isLoggedIn === false) {
     console.log("No user found. Redirecting to sign");
-    window.location.href = "./pages/register.html";
+    window.location.href = "./pages/landing.html";
   } else if (isLoggedIn === "error") {
     console.log("FAILED TO LOAD KODDA");
   } else {

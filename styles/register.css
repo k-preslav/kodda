@@ -19,7 +19,7 @@ body {
 
 #background {
   position: fixed;
-  top: -120%;
+  top: -125%;
   left: -100%;
   width: 300%;
   height: 300%;
@@ -42,7 +42,8 @@ body {
 /* Sign panel styling */
 #signPanel {
   margin-top: 10%;
-  background-color: #2D2D2D;
+  background-color: #2d2d2dad;
+  backdrop-filter: blur(10px);
   padding: 20px;
   gap: 20px;
   display: flex;
@@ -52,6 +53,8 @@ body {
   width: 350px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  opacity: 0.5;
+  animation: slideIn 0.35s ease-out forwards;
 }
 
 /* Keyframes for sliding in animation */
@@ -82,7 +85,7 @@ h2 {
 }
 
 input {
-  background-color: #373737;
+  background-color: rgba(44, 44, 44, 0.55); /* Change this to any color */
   color: white;
   padding: 10px;
   border: none;
@@ -92,6 +95,7 @@ input {
   transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   box-shadow: 0px 4px 8px rgb(0, 0, 0, 0.15);
 }
+
 
 input:focus {
   background-color: #4A4A4A;
@@ -106,6 +110,7 @@ input:focus {
 
 #controls button {
   width: 125px;
+  height: 40px;
 }
 
 #registerSwitch {
@@ -129,6 +134,21 @@ input:focus {
 
 #successIcon {
   display: none;
+}
+
+#loadingSpinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid transparent;
+  border-top-color: rgba(255, 255, 255, 0.705);
+  border-radius: 50%; 
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .input-container {

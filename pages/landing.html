@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kodda</title>
+
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&display=swap" as="style">
+  <link rel="preload" href="../image/title.png" as="image">
+
+  <!-- Load CSS -->
+  <link rel="stylesheet" href="../styles/register.css">
+  <link rel="stylesheet" href="../styles/landing.css">
+  <link rel="stylesheet" href="../styles/animations.css">
+
+  <!-- Load fonts with display swap -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&display=swap" media="print" onload="this.media='all'">
+</head>
+<body>
+  <div id="background"></div>
+  <div class="container">
+    <div class="title">
+      <img src="../image/title.png" alt="kodda" class="titleImage">
+      <p>Write it. Keep it. Use it.</p>
+    </div>
+    
+    <div class="buttonContainer">
+      <button id="getStartedButton">Get Started</button>
+      <a id="moreLink">learn more</a>
+    </div>
+
+    <div id="moreText">
+      <p>
+        🚀 Tired of always googling how to center a div? With <span style="font-weight: 800;">Kodda</span>, you can store your code snippets, reuse them, and share them with others in just a click! ✨
+      </p>
+      <br/>
+      <p>Start saving your snippets today and boost your productivity! 💡</p>
+    </div>
+    
+  </div>
+  <script src="../src/landing/landingPage.js"></script>
+</body>
+</html>
