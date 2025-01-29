@@ -87,7 +87,7 @@ html, body {
 
 #moreText {
   position: absolute;
-  top: 80%;
+  top: 78%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 600px;
@@ -102,4 +102,9 @@ html, body {
   overflow: hidden;
   opacity: 0;
   transition: max-height 0.35s ease-out, opacity 0.35s ease-out;
+}
+
+#footer {
+  opacity: 0;
+  animation: slideIn 0.3s 0.8s forwards;
 }

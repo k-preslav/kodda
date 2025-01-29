@@ -1,4 +1,5 @@
 import { loginUser, loginUserById, registerUser } from "../apiHelper.js";
+import { setupFooterLinks } from "../elements/footer/footerLinks.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let registerType = "sign-up";
@@ -16,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const signTitle = document.getElementById("signTitle");
   const loadingSpinner = document.getElementById("loadingSpinner");
   
+  setupFooterLinks();
+
   registerButton?.addEventListener("click", () => {
     if (registerType === "sign-up") register();
     else if (registerType === "log-in") login();

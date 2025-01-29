@@ -1,3 +1,5 @@
+import { setupFooterLinks } from "../elements/footer/footerLinks";
+
 document.addEventListener("DOMContentLoaded", () => {
   const moreText = document.getElementById("moreText");
   const moreLink = document.getElementById("moreLink");
@@ -26,4 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
   getStartedButton.addEventListener("click", () => {
     window.location.href = "/pages/register.html";
   });
+
+  setupFooterLinks();
 });
