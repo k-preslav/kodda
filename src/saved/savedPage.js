@@ -1,5 +1,4 @@
-import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
-import { fetchSnippets, getSnippetById } from "../apiHelper.js";
+import { autoLoginUser, fetchSnippets, getSnippetById } from "../apiHelper.js";
 import { searchSnippets } from "./search.js";
 
 let galleryContainer;
@@ -16,6 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
   searchButton = document.getElementById("searchButton");
   searchInput = document.getElementById("searchInput");
   searchInput.focus();
+
+  autoLoginUser().then((res) => {
+    if (!localStorage.getItem('token') || res === false) {
+      window.location.href = "../index.html";
+    }
+  });
 
   displaySnippets();
 
@@ -52,27 +57,21 @@ function search() {
 
 function displaySnippets(snippets) {
   clearGallery();
-
-  const userId = getUserIdFromLocalStorage();
   
-  if (userId) {
-    loadingText.style.visibility = "visible";
-    noAccountSnippets.style.visibility = "hidden";
+  loadingText.style.visibility = "visible";
+  noAccountSnippets.style.visibility = "hidden";
 
-    if (!snippets) {
-      fetchSnippets(userId).then((snippets) => {
-        if (snippets.length === 0) {
-          noAccountSnippets.style.visibility = "visible";
-          loadingText.style.visibility = "hidden";
-        }
+  if (!snippets) {
+    fetchSnippets().then((snippets) => {
+      if (snippets.length === 0) {
+        noAccountSnippets.style.visibility = "visible";
+        loadingText.style.visibility = "hidden";
+      }
 
-        createSnippets(snippets, 300);
-      });
-    } else {
       createSnippets(snippets, 300);
-    }
+    });
   } else {
-    noAccountSnippets.style.visibility = "visible";
+    createSnippets(snippets, 300);
   }
 }
 

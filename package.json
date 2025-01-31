@@ -18,6 +18,8 @@
   "author": "Preslav Kolev",
   "license": "MIT",
   "dependencies": {
+    "jwt-decode": "^4.0.0",
+    "jwt-js-decode": "^1.9.0",
     "vanjs-core": "^1.5.3",
     "vanjs-element": "^2.0.0"
   },

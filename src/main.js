@@ -1,11 +1,14 @@
-import { autoLogin } from "./registerPage/registerPage";
+import { autoLoginUser } from "./apiHelper";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const isLoggedIn = await autoLogin();
+  const isLoggedIn = await autoLoginUser();
 
   if (isLoggedIn === false) {
-    console.log("No user found. Redirecting to sign");
-    window.location.href = "./pages/landing.html";
+    if (localStorage.getItem('token')) {
+      window.location.href = "./pages/register.html";
+    } else {
+      window.location.href = "./pages/landing.html";
+    }
   } else if (isLoggedIn === "error") {
     console.log("FAILED TO LOAD KODDA");
   } else {

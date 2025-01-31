@@ -1,4 +1,4 @@
-import { loginUser, loginUserById, registerUser } from "../apiHelper.js";
+import { loginUser, registerUser } from "../apiHelper.js";
 import { setupFooterLinks } from "../elements/footer/footerLinks.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -86,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
       messageLabel.style.display = "block";
       
       if (data.userId) {
-        localStorage.setItem('userId', data.userId);
         messageLabel.style.display = "none";
         buttonText.style.display = "none"; 
         successIcon.style.display = "inline";
@@ -122,7 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
       messageLabel.style.display = "block";
       
       if (data.userId) {
-        localStorage.setItem('userId', data.userId);
         messageLabel.style.display = "none";
         buttonText.style.display = "none";
         successIcon.style.display = "inline";
@@ -154,37 +152,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-
-
-export async function autoLogin() { 
-  const userId = localStorage.getItem('userId');
-
-  if (userId) {
-     try {
-      const data = await loginUserById(userId); 
-      if (data.userId) {
-        return true; 
-      } 
-      else {
-        localStorage.removeItem('userId');
-        return false; 
-      } 
-    } 
-    catch (error) { 
-      console.error("Error:", error.message); 
-      return "error"; 
-    } 
-  }  
-  return false; 
-}
-  
-export function getUserIdFromLocalStorage() { 
-  let userId = localStorage.getItem("userId");
-  
-  if (userId) { 
-    return userId;
-  }
-
-  return false;
-}

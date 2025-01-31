@@ -1,10 +1,9 @@
-import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
 import { fetchSnippets } from "../apiHelper.js";
 
 export function searchSnippets(query) {
   let found = [];
 
-  return fetchSnippets(getUserIdFromLocalStorage()).then((snippets) => {
+  return fetchSnippets().then((snippets) => {
     query = query.toLowerCase();
     const queryWords = splitQuerry(query);
 

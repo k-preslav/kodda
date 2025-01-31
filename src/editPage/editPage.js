@@ -1,5 +1,4 @@
-import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
-import { deleteSnippet, getSnippetById, updateSnippet } from "../apiHelper.js";
+import { autoLoginUser, deleteSnippet, getSnippetById, updateSnippet } from "../apiHelper.js";
 import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper.js";
 import { initializeZoomLevel } from "../editor/zoomHelper.js";
 
@@ -19,10 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   saveSnipButton.disabled = false;
   saveSnipButton.textContent = "Update Snippet";
-
-  if (!getUserIdFromLocalStorage()) {
-    saveSnipButton.textContent = "Log In";
-  }
 
   require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0/min/vs' } });
 
@@ -63,6 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
       smoothScrolling: true,
       renderValidationDecorations: "off",
       contextmenu: false,
+    });
+
+    autoLoginUser().then((res) => {
+      if (!localStorage.getItem('token') || res === false) {
+        window.location.href = "../index.html";
+      }
     });
 
     setupEditorEvents();
@@ -114,34 +115,29 @@ document.addEventListener("DOMContentLoaded", () => {
   saveSnipButton.addEventListener("click", async () => {
     saveSnipButton.disabled = true;
 
-    if (getUserIdFromLocalStorage()) {
-      saveSnipButton.classList.add("loading");
-      saveSnipButton.textContent = "Saving...";
+    saveSnipButton.classList.add("loading");
+    saveSnipButton.textContent = "Saving...";
 
-      const title = getWordsFromSpans(nameInput);
-      const description = getWordsFromSpans(descriptionInput);
-      const code = editor.getValue();
-      const language = typeDropdown.value;
+    const title = getWordsFromSpans(nameInput);
+    const description = getWordsFromSpans(descriptionInput);
+    const code = editor.getValue();
+    const language = typeDropdown.value;
 
-      updateSnippet(snipToEdit._id, getUserIdFromLocalStorage(), title, description, code, language)
-        .then((data) => {
-          if (data.snippetExists) {
-            console.log(data.snippetExists);
-          } else if (data.fieldsReguired) {
-            console.log(data.fieldsReguired);
-          } else {
-            saveSnipButton.textContent = "Updated.";
-            saveSnipButton.classList.remove("loading");
-            saveSnipButton.disabled = true;
-          }
-        })
-        .catch((err) => {
-          console.error("Error updating snippet:", err);
-        });
-    } else {
-      console.log("User is not logged in.");
-      window.location.href = "../index.html";
-    }
+    updateSnippet(snipToEdit._id, title, description, code, language)
+      .then((data) => {
+        if (data.snippetExists) {
+          console.log(data.snippetExists);
+        } else if (data.fieldsReguired) {
+          console.log(data.fieldsReguired);
+        } else {
+          saveSnipButton.textContent = "Updated.";
+          saveSnipButton.classList.remove("loading");
+          saveSnipButton.disabled = true;
+        }
+      })
+      .catch((err) => {
+        console.error("Error updating snippet:", err);
+      });
   });
 
   // Handle deletion

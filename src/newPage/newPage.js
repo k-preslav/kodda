@@ -1,5 +1,4 @@
-import { getUserIdFromLocalStorage } from "../registerPage/registerPage.js";
-import { addSnippet, getCodeProperties } from "../apiHelper.js";
+import { addSnippet, autoLoginUser, getCodeProperties } from "../apiHelper.js";
 import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper.js";
 import { initializeZoomLevel } from "../editor/zoomHelper.js";
 import { attachDragLeave, attachDragOver, attachOnDrop } from "./dragDrop.js";
@@ -68,6 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
       contextmenu: false,
     });
 
+    autoLoginUser().then((res) => {
+      if (!localStorage.getItem('token') || res === false) {
+        saveSnipButton.textContent = "Log In";
+      }
+    });
+
     setupEditorEvents();
     initializeZoomLevel(editor);
     
@@ -76,10 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
     attachOnDrop(editorContainer, editor);
 
     reset();
-
-    if (!getUserIdFromLocalStorage()) {
-      saveSnipButton.textContent = "Log In";
-    }
   });
 
   // Set up editor events
@@ -100,42 +101,45 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(changeTimeout);
       changeTimeout = setTimeout(() => {
         if (text) {
-          if (getUserIdFromLocalStorage()) {
-            if (!isPinned(pinButtonDesc))
-              wrapWordsWithSpans("Generating...", descriptionInput);            
-            languageTypeCodeBar.textContent = "...";
+          if (!isPinned(pinButtonDesc))
+            wrapWordsWithSpans("Generating...", descriptionInput);            
+          languageTypeCodeBar.textContent = "...";
 
-            propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
-            propertiesPanel.style.opacity = 1;
+          propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
+          propertiesPanel.style.opacity = 1;
 
-            disablePinnedButtons();
-
-            getCodeProperties(text).then((data) => {
-              enablePinnedButtons();
-
-              if (!isPinned(pinButtonName))
-                wrapWordsWithSpans(data.title, nameInput);
-
-              if (!isPinned(pinButtonDesc))
-                wrapWordsWithSpans(data.description, descriptionInput);
-              
-              typeDropdown.value = data.language;
-              languageTypeCodeBar.textContent = data.language;
-              monaco.editor.setModelLanguage(editor.getModel(), data.language);
-
-              // Wait for the description animation to finish
-              setTimeout(() => {
-                propertiesReady = true;
-                propertiesReadyPromiseResolve();
-
-                // Stop the glow animation
-                propertiesPanel.style.animation = "none";
-              }, data.description.split(' ').length * 15 + 750);
-            });
-          } else {
-            console.log("User is not logged in.");
-            wrapWordsWithSpans('To generate a description you must Log In.', descriptionInput);
-          }
+          disablePinnedButtons();
+          
+          autoLoginUser().then((res) => {
+            if (localStorage.getItem('token') && res === true) {
+              getCodeProperties(text).then((data) => {
+                enablePinnedButtons();
+    
+                if (!isPinned(pinButtonName))
+                  wrapWordsWithSpans(data.title, nameInput);
+    
+                if (!isPinned(pinButtonDesc))
+                  wrapWordsWithSpans(data.description, descriptionInput);
+                
+                typeDropdown.value = data.language;
+                languageTypeCodeBar.textContent = data.language;
+                monaco.editor.setModelLanguage(editor.getModel(), data.language);
+    
+                // Wait for the description animation to finish
+                setTimeout(() => {
+                  propertiesReady = true;
+                  propertiesReadyPromiseResolve();
+    
+                  // Stop the glow animation
+                  propertiesPanel.style.animation = "none";
+                }, data.description.split(' ').length * 15 + 750);
+              });
+            }
+            else {
+              wrapWordsWithSpans("You must be logged in to generate snippet properties.", descriptionInput);
+              propertiesPanel.style.animation = "none";
+            }
+          });
         }
       }, 1650);
     });
@@ -146,50 +150,50 @@ document.addEventListener("DOMContentLoaded", () => {
     saveSnipButton.disabled = true;
     disablePinnedButtons();
 
+    autoLoginUser().then((res) => {
+      if (!localStorage.getItem('token') || res === false) {
+        window.location.href = "../index.html";
+        return;
+      }
+    });
+
     const code = editor.getValue();
 
-    if (getUserIdFromLocalStorage()) {
-      if (!propertiesReady && code !== '') {
-        saveSnipButton.textContent = "Saving...";
+    if (!propertiesReady && code !== '') {
+      saveSnipButton.textContent = "Saving...";
 
-        propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
-        propertiesPanel.style.opacity = 1;
+      propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
+      propertiesPanel.style.opacity = 1;
 
-        console.log("Waiting for properties to finish generating...");
-        
-        await propertiesReadyPromise;
-        console.log("Properties ready!");
-      }
-
-      const title = getWordsFromSpans(nameInput);
-      const description = getWordsFromSpans(descriptionInput);
-      const language = typeDropdown.value;
-
-      console.log(description);
-
-      addSnippet(getUserIdFromLocalStorage(), title, description, code, language)
-        .then((data) => {
-          if (data.snippetExists) {
-            alert(data.snippetExists);
-            saveSnipButton.textContent = "Save Snippet";
-            saveSnipButton.disabled = false;
-          } else if (data.fieldsReguired) {
-            alert(data.fieldsReguired);
-            enablePinnedButtons();
-            saveSnipButton.textContent = "Save Snippet";
-            saveSnipButton.disabled = false;
-          } else {
-            reset(true);
-            editor.setValue('');
-          }
-        })
-        .catch((err) => {
-          console.error("Error saving snippet:", err);
-        });
-    } else {
-      console.log("User is not logged in.");
-      window.location.href = "../index.html";
+      console.log("Waiting for properties to finish generating...");
+      
+      await propertiesReadyPromise;
+      console.log("Properties ready!");
     }
+
+    const title = getWordsFromSpans(nameInput);
+    const description = getWordsFromSpans(descriptionInput);
+    const language = typeDropdown.value;
+
+    addSnippet(title, description, code, language)
+      .then((data) => {
+        if (data.snippetExists) {
+          alert(data.snippetExists);
+          saveSnipButton.textContent = "Save Snippet";
+          saveSnipButton.disabled = false;
+        } else if (data.fieldsReguired) {
+          alert(data.fieldsReguired);
+          enablePinnedButtons();
+          saveSnipButton.textContent = "Save Snippet";
+          saveSnipButton.disabled = false;
+        } else {
+          reset(true);
+          editor.setValue('');
+        }
+      })
+      .catch((err) => {
+        console.error("Error saving snippet:", err);
+      });
   });
 
   pinButtons.forEach(pinButn => {
@@ -223,8 +227,8 @@ document.addEventListener("DOMContentLoaded", () => {
     disablePinnedButtons();
 
     typeDropdown.value = "other";
-
-    saveSnipButton.textContent = getUserIdFromLocalStorage() ? "Save Snippet" : "Log In";
+   
+    //saveSnipButton.textContent = getUserIdFromLocalStorage() ? "Save Snippet" : "Log In";
     saveSnipButton.disabled = false;
 
     propertiesReady = false;
