@@ -126,9 +126,18 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSnippet(snipToEdit._id, title, description, code, language)
       .then((data) => {
         if (data.snippetExists) {
-          console.log(data.snippetExists);
+          alert(data.snippetExists);
+          saveSnipButton.textContent = "Update Snippet";
+          saveSnipButton.disabled = false;
         } else if (data.fieldsReguired) {
-          console.log(data.fieldsReguired);
+          alert(data.fieldsReguired);
+          saveSnipButton.textContent = "Update Snippet";
+          saveSnipButton.disabled = false;
+        } 
+        else if (data.userDoesNotExist) {
+          alert(data.userDoesNotExist);
+          saveSnipButton.textContent = "Update Snippet";
+          saveSnipButton.disabled = false;
         } else {
           saveSnipButton.textContent = "Updated.";
           saveSnipButton.classList.remove("loading");
@@ -144,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
   deleteSnipButton.addEventListener("click", async () => {
     try {
       const data = await deleteSnippet(snipToEdit._id);
-      
+
       if (data && data.error) {
         console.error(data.error);
         return;

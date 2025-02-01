@@ -150,50 +150,56 @@ document.addEventListener("DOMContentLoaded", () => {
     saveSnipButton.disabled = true;
     disablePinnedButtons();
 
-    autoLoginUser().then((res) => {
+    autoLoginUser().then(async(res) => {
       if (!localStorage.getItem('token') || res === false) {
         window.location.href = "../index.html";
         return;
       }
+
+      const code = editor.getValue();
+
+      if (!propertiesReady && code !== '') {
+        saveSnipButton.textContent = "Saving...";
+  
+        propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
+        propertiesPanel.style.opacity = 1;
+  
+        console.log("Waiting for properties to finish generating...");
+        
+        await propertiesReadyPromise;
+        console.log("Properties ready!");
+      }
+  
+      const title = getWordsFromSpans(nameInput);
+      const description = getWordsFromSpans(descriptionInput);
+      const language = typeDropdown.value;
+  
+      addSnippet(title, description, code, language)
+        .then((data) => {
+          if (data.snippetExists) {
+            alert(data.snippetExists);
+            saveSnipButton.textContent = "Save Snippet";
+            saveSnipButton.disabled = false;
+          } else if (data.fieldsReguired) {
+            alert(data.fieldsReguired);
+            enablePinnedButtons();
+            saveSnipButton.textContent = "Save Snippet";
+            saveSnipButton.disabled = false;
+          } 
+          else if (data.userDoesNotExist) {
+            alert(data.userDoesNotExist);
+            saveSnipButton.textContent = "Save Snippet";
+            saveSnipButton.disabled = false;
+          }
+          else {
+            reset(true);
+            editor.setValue('');
+          }
+        })
+        .catch((err) => {
+          console.error("Error saving snippet:", err);
+        });
     });
-
-    const code = editor.getValue();
-
-    if (!propertiesReady && code !== '') {
-      saveSnipButton.textContent = "Saving...";
-
-      propertiesPanel.style.animation = "glowingShadow 1.65s infinite ease-in-out";
-      propertiesPanel.style.opacity = 1;
-
-      console.log("Waiting for properties to finish generating...");
-      
-      await propertiesReadyPromise;
-      console.log("Properties ready!");
-    }
-
-    const title = getWordsFromSpans(nameInput);
-    const description = getWordsFromSpans(descriptionInput);
-    const language = typeDropdown.value;
-
-    addSnippet(title, description, code, language)
-      .then((data) => {
-        if (data.snippetExists) {
-          alert(data.snippetExists);
-          saveSnipButton.textContent = "Save Snippet";
-          saveSnipButton.disabled = false;
-        } else if (data.fieldsReguired) {
-          alert(data.fieldsReguired);
-          enablePinnedButtons();
-          saveSnipButton.textContent = "Save Snippet";
-          saveSnipButton.disabled = false;
-        } else {
-          reset(true);
-          editor.setValue('');
-        }
-      })
-      .catch((err) => {
-        console.error("Error saving snippet:", err);
-      });
   });
 
   pinButtons.forEach(pinButn => {
@@ -228,8 +234,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     typeDropdown.value = "other";
    
-    //saveSnipButton.textContent = getUserIdFromLocalStorage() ? "Save Snippet" : "Log In";
-    saveSnipButton.disabled = false;
+    autoLoginUser().then((res) => {
+      if (!localStorage.getItem('token') || res === false) {
+        saveSnipButton.textContent = "Log In";
+      }
+      else {
+        saveSnipButton.textContent = "Save Snippet";
+      }
+      saveSnipButton.disabled = false;
+    });
 
     propertiesReady = false;
     propertiesReadyPromiseResolve = null;

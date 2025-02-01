@@ -12,7 +12,6 @@ export async function registerUser(username, email, passwordHash) {
     const data = await response.json();
     console.log(data.token);
     
-    // Store the token in local storage
     if (data.token) {
       localStorage.setItem('token', data.token);
     }
@@ -20,58 +19,95 @@ export async function registerUser(username, email, passwordHash) {
     return data;
   }
   
-  export async function loginUser(email, password) {
+  export async function loginUser(username, password) {
     const response = await fetch(`${API_BASE_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ username, password })
     });
     
     const data = await response.json();
     console.log(data.token);
     
-    // Store the token in local storage
     if (data.token) {
         localStorage.setItem('token', data.token);
     }
 
     return data;
 }
-
 export async function autoLoginUser() {
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-  if (token) {
-      try {
-          // Decode the token to get user information
-          const decodedToken = decode(token);
-          const currentTime = Date.now() / 1000; // Current time in seconds
+    if (token) {
+        try {
+            const decodedToken = decode(token);
+            const currentTime = Date.now() / 1000;
 
-          // Check if the token is still valid
-          if (decodedToken.payload.exp > currentTime) {
-              // Token is valid, user is logged in
-              return true;
-          } else {
-              // Token is expired
-              localStorage.removeItem('token'); // Remove expired token
-              return false;
-          }
-      } catch (error) {
-          console.error("Error decoding token:", error.message);
-          return false; // Return false if there's an error
-      }
-  }
-  return false; // No token found, user is not logged in
+            // Check if the token is expired
+            if (decodedToken.payload.exp > currentTime) {
+                
+                // Verify the token with the server
+                const verify = await verifyToken(token);
+                if (verify.ok) {
+                    // Check if the user exists
+                    const exists = await userExists(token);
+                    if (exists.ok) {
+                        return true; // Token is valid and user exists
+                    } else {
+                        return false; // User does not exist
+                    }
+                } else {
+                    return false; // Token is not valid
+                }
+            } else {
+                localStorage.removeItem('token'); // Remove expired token
+                return false;
+            }
+        } catch (error) {
+            console.error("Error decoding token:", error.message);
+            return false;
+        }
+    }
+    return false;
 }
 
-export async function addSnippet(title, description, code, language = "Plain Text") {
-    const token = localStorage.getItem('token'); // Get the token from local storage
+export async function verifyToken(token) {
+    const response = await fetch(`${API_BASE_URL}/verify-token`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    return response;
+}
 
-    const response = await fetch(`${API_BASE_URL}/snippets`, {
+export async function userExists(token) {
+    // Decode the token to get the userId
+    const decodedToken = decode(token);
+    const userId = decodedToken.payload.userId;
+
+    const response = await fetch(`${API_BASE_URL}/user-exists/${userId}`, {
+        method: 'POST', // Change to POST
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+    return data;
+}
+
+
+export async function addSnippet(title, description, code, language = "Plain Text") {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${API_BASE_URL}/add-snippet`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // Include the token in the headers
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ title, description, code, language })
     });
@@ -81,13 +117,13 @@ export async function addSnippet(title, description, code, language = "Plain Tex
 }
 
 export async function updateSnippet(snippetId, title, description, code, language = "Plain Text") {
-    const token = localStorage.getItem('token'); // Get the token from local storage
+    const token = localStorage.getItem('token');
 
-    const response = await fetch(`${API_BASE_URL}/snippets/${snippetId}`, {
+    const response = await fetch(`${API_BASE_URL}/update-snippet/${snippetId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // Include the token in the headers
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ title, description, code, language })
     });
@@ -97,15 +133,15 @@ export async function updateSnippet(snippetId, title, description, code, languag
 }
 
 export async function fetchSnippets() {
-    const token = localStorage.getItem('token'); // Get the token from local storage
+    const token = localStorage.getItem('token');
 
     // Decode the token to get the userId
     const decodedToken = decode(token);
-    const userId = decodedToken.payload.userId; // Extract userId from the token
+    const userId = decodedToken.payload.userId;
 
-    const response = await fetch(`${API_BASE_URL}/snippets/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/get-snippets-for-user/${userId}`, {
         headers: {
-            "Authorization": `Bearer ${token}` // Include the token in the headers
+            "Authorization": `Bearer ${token}`
         }
     });
 
@@ -114,18 +150,18 @@ export async function fetchSnippets() {
 }
 
 export async function getSnippetById(snipId) {
-    const response = await fetch(`${API_BASE_URL}/snippet/${snipId}`);
+    const response = await fetch(`${API_BASE_URL}/get-snippet/${snipId}`);
     const snippet = await response.json();
     return snippet;
 }
 
 export async function deleteSnippet(snippetId) {
-    const token = localStorage.getItem('token'); // Get the token from local storage
+    const token = localStorage.getItem('token');
 
-    const response = await fetch(`${API_BASE_URL}/snippets-del/${snippetId}`, {
+    const response = await fetch(`${API_BASE_URL}/delete-snippet/${snippetId}`, {
         method: "DELETE",
         headers: {
-            "Authorization": `Bearer ${token}` // Include the token in the headers
+            "Authorization": `Bearer ${token}`
         }
     });
 

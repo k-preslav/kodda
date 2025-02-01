@@ -20,15 +20,30 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFooterLinks();
 
   registerButton?.addEventListener("click", () => {
+    registerButton.disabled = true;
+
     if (registerType === "sign-up") register();
     else if (registerType === "log-in") login();
-
-    registerButton.disabled = true;
   });
 
   registerSwitch?.addEventListener("click", () => {
     toggleRegisterType();
   });
+
+  emailInput.addEventListener("blur", () => {
+    const email = emailInput.value.trim();
+    if (email && !isValidEmail(email)) {
+      messageLabel.textContent = "Please enter a valid email address.";
+      messageLabel.style.display = "block";
+    } else {
+      messageLabel.style.display = "none";
+    }
+  });
+
+  function isValidEmail(email) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  }
 
   function toggleRegisterType() {
     const inputsContainer = document.getElementById("signInputs");
@@ -45,13 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
         buttonText.textContent = "Log In";
         signTitle.textContent = "Log in to your account";
         registerSwitch.textContent = "Don't have an account?";
-        usernameInput.style.display = "none";
+        emailInput.style.display = "none";
       } else {
         registerType = "sign-up";
         buttonText.textContent = "Sign Up";
         signTitle.textContent = "Create a new account";
         registerSwitch.textContent = "Already have an account?";
-        usernameInput.style.display = "block";
+        emailInput.style.display = "block";
       }
       
       inputsContainer.classList.remove("fade-out");
@@ -61,6 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         inputsContainer.style.animation = "";
       }, 300);
+
+      messageLabel.style.display = "none";
       
       // Reset button state
       buttonText.style.display = "inline";
@@ -79,9 +96,31 @@ document.addEventListener("DOMContentLoaded", () => {
     loadingSpinner.style.display = "none";
   }
 
+  function isValidEmail(email) {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  }
+
+
   function register() {
     showLoading();
-    registerUser(usernameInput.value, emailInput.value, passwordInput.value).then((data) => {
+    
+    if (emailInput.value && !isValidEmail(emailInput.value)) {
+      messageLabel.textContent = "Please enter a valid email address.";
+      messageLabel.style.display = "block";
+      
+      // Reset button state
+      hideLoading();
+      buttonText.style.display = "inline";
+      successIcon.style.display = "none";
+      registerButton.disabled = false;
+
+      return;
+    } else {
+      messageLabel.style.display = "none";
+    }
+
+    registerUser(usernameInput.value.toLowerCase(), emailInput.value.toLowerCase(), passwordInput.value).then((data) => {
       hideLoading();
       messageLabel.style.display = "block";
       
@@ -95,28 +134,50 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 600);
       }
       else if (data.userExists) {
-        buttonText.style.display = "inline";
-        messageLabel.textContent = "A user with this email already exists.";
+        buttonText.style.display = "inline"; 
+        successIcon.style.display = "none";
+        
+        messageLabel.style.display = "block";
+        messageLabel.textContent = data.userExists;
       }
       else if (data.fieldsRequired) {
         buttonText.style.display = "inline";
-        messageLabel.textContent = "All fields are required.";
+        successIcon.style.display = "none";
+        
+        messageLabel.style.display = "block";
+        messageLabel.textContent = data.fieldsRequired;
       } else {
         buttonText.style.display = "inline";
+        successIcon.style.display = "none";
+        
+        messageLabel.style.display = "block";
         messageLabel.textContent = "An unexpected error occurred. Please try again.";
       }
 
       registerButton.disabled = false;
-
-      setTimeout(() => {
-        messageLabel.style.display = "none";
-      }, 5000);
     });
   }
   
   function login() {
     showLoading();
-    loginUser(emailInput.value, passwordInput.value).then((data) => {
+
+    if (emailInput.value && !isValidEmail(emailInput.value)) {
+      messageLabel.textContent = "Please enter a valid email address.";
+      messageLabel.style.display = "block";
+      
+      // Reset button state
+      hideLoading();
+      buttonText.style.display = "inline";
+      successIcon.style.display = "none";
+      registerButton.disabled = false;
+
+      successIcon.style.display = "none";
+      return;
+    } else {
+      messageLabel.style.display = "none";
+    }
+
+    loginUser(usernameInput.value.toLowerCase(), passwordInput.value).then((data) => {
       hideLoading();
       messageLabel.style.display = "block";
       
@@ -130,25 +191,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 600);
       }
       else if (data.notFound) {
+        buttonText.style.display = "inline";
+        successIcon.style.display = "none";
+        
         messageLabel.textContent = data.notFound;
       }
       else if (data.invalidCredentials) {
         buttonText.style.display = "inline";
+        successIcon.style.display = "none";
+        
         messageLabel.textContent = data.invalidCredentials;
       }
       else if (data.fieldsRequired) {
         buttonText.style.display = "inline";
-        messageLabel.textContent = "All fields are required.";
-      } else {
+        successIcon.style.display = "none";
+        
+        messageLabel.textContent = data.fieldsRequired;
+      } 
+      else if (data.blocked) {
         buttonText.style.display = "inline";
+        successIcon.style.display = "none";
+        
+        messageLabel.textContent = data.blocked;
+      }
+      else {
+        buttonText.style.display = "inline";
+        successIcon.style.display = "none";
+        
         messageLabel.textContent = "An unexpected error occurred. Please try again.";
       }
       
       registerButton.disabled = false;
-
-      setTimeout(() => {
-        messageLabel.style.display = "none";
-      }, 5000);
     });
   }
 });
