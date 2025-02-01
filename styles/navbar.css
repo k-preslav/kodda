@@ -10,6 +10,14 @@
   background-clip: text;
 }
 
+.subtitle {
+  margin: 0;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.275);
+  font-weight: 100;
+  font-size: 16px;
+}
+
 .navBar {
   display: flex;
   justify-content: space-between;
@@ -17,6 +25,13 @@
   color: white;
   padding: 10px 20px;
   font-size: 24px;
+}
+
+.navBarLeft {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
 
 .navBarRight {

@@ -19,6 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
   
   setupFooterLinks();
 
+  // Check if token exists
+  if (localStorage.getItem('token')) {
+    toggleRegisterType(); // Make it switch to log in
+  }
+
   registerButton?.addEventListener("click", () => {
     registerButton.disabled = true;
 
