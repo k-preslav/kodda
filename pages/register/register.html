@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kodda - Register</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+  <link rel="stylesheet" href="../styles/register.css">
+  <link rel="stylesheet" href="../styles/button.css">
+  <link rel="stylesheet" href="../styles/animations.css">
+  <link rel="stylesheet" href="../styles/footer.css">
+</head>
+<body>
+  <div id="background"></div>
+  <div id="signPanel">
+    <h2 id="signTitle">Create a new account</h2>
+    
+    <div id="signInputs">
+      <input id="usernameInput" placeholder="Username" type="text" required>
+      <input id="emailInput" placeholder="Email" type="email" required>
+      <input id="passwordInput" placeholder="Password" type="password" required>
+    </div>
+    
+    <div id="controls">
+      <a id="registerSwitch">Already have an account?</a>
+      <button id="registerButton">
+        <span id="buttonText">Sign Up</span>
+        <div id="loadingSpinner"></div>
+        <i id="successIcon" class="fas fa-check"></i>
+      </button>      
+    </div>
+    <p id="messageLabel"></p>
+  </div>
+
+  <div id="footer">
+    <div id="footerLeft">
+      <p>© 2025 Kodda. All rights reserved.</p>
+      <p><a href="./legal/terms-of-use.html">Terms of Use</a></p>
+      <p><a href="./legal/privacy-policy.html">Privacy Policy</a></p>
+    </div>
+    <div id="footerRight">
+      <a><i class="fa-regular fa-envelope"></i></a>
+      <a><i class="fa-brands fa-dev"></i></a>
+      <a><i class="fa-brands fa-x-twitter"></i></a>
+      <a><i class="fa-brands fa-instagram fa-2x"></i></a>
+    </div>
+  </div>
+  
+  <script type="module" src="../../src/registerPage/registerPage.js"></script>
+</body>
+</html>

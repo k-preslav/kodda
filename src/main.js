@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (isLoggedIn === false) {
     if (localStorage.getItem('token')) {
-      window.location.href = "./pages/register.html";
+      window.location.href = "./pages/register/register.html";
     } else {
       window.location.href = "./pages/landing.html";
     }

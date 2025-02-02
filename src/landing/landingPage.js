@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   getStartedButton.addEventListener("click", () => {
-    window.location.href = "/pages/register.html";
+    window.location.href = "/pages/register/register.html";
   });
 
   setupFooterLinks();

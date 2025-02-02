@@ -1,4 +1,4 @@
-import { loginUser, registerUser } from "../apiHelper.js";
+import { isUserVerified, loginUser, registerUser, sendVerificationCode } from "../apiHelper.js";
 import { setupFooterLinks } from "../elements/footer/footerLinks.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -130,13 +130,29 @@ document.addEventListener("DOMContentLoaded", () => {
       messageLabel.style.display = "block";
       
       if (data.userId) {
+        showLoading();
+        
         messageLabel.style.display = "none";
         buttonText.style.display = "none"; 
-        successIcon.style.display = "inline";
+        successIcon.style.display = "none";
 
-        setTimeout(() => {
-          window.location.href = "../index.html";
-        }, 600);
+        sendVerificationCode().then((data) => {
+          hideLoading();
+          successIcon.style.display = "inline";
+
+          if (data.success) {
+            setTimeout(() => {
+              window.location.href = "../pages/register/verify.html";
+            }, 300);
+          } else {
+            messageLabel.textContent = "An unexpected error occurred. Please try again.";
+            messageLabel.style.display = "block";
+            verifyButton.disabled = true;
+
+            buttonText.style.display = "inline";
+            buttonText.textContent = "Verify";
+          }
+        });
       }
       else if (data.userExists) {
         buttonText.style.display = "inline"; 
@@ -187,13 +203,37 @@ document.addEventListener("DOMContentLoaded", () => {
       messageLabel.style.display = "block";
       
       if (data.userId) {
-        messageLabel.style.display = "none";
-        buttonText.style.display = "none";
-        successIcon.style.display = "inline";
+        showLoading();
+        isUserVerified().then((verified) => {
+          hideLoading();
 
-        setTimeout(() => {
-          window.location.href = "../index.html";
-        }, 600);
+          if (verified.verified) {
+            messageLabel.style.display = "none";
+            buttonText.style.display = "none";
+            successIcon.style.display = "inline";
+
+            setTimeout(() => {
+              window.location.href = "../index.html";
+            }, 600);
+          }
+          else {
+            messageLabel.textContent = "Please verify your account.";
+            messageLabel.style.display = "block";
+
+            showLoading();
+            registerButton.disabled = true;
+
+            sendVerificationCode().then((data) => {
+              hideLoading();
+              
+              if (data.success) {
+                setTimeout(() => {
+                  window.location.href = "../pages/register/verify.html";
+                }, 300);
+              }
+            });
+          }
+        });
       }
       else if (data.notFound) {
         buttonText.style.display = "inline";

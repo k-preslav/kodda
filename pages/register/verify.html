@@ -5,7 +5,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kodda - Register</title>
+  <title>Kodda - Verify</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
@@ -18,18 +18,15 @@
 <body>
   <div id="background"></div>
   <div id="signPanel">
-    <h2 id="signTitle">Create a new account</h2>
+    <h2 id="signTitle">Verify your account</h2>
     
     <div id="signInputs">
-      <input id="usernameInput" placeholder="Username" type="text" required>
-      <input id="emailInput" placeholder="Email" type="email" required>
-      <input id="passwordInput" placeholder="Password" type="password" required>
+      <input id="codeInput" placeholder="Code" type="text" required>
     </div>
     
     <div id="controls">
-      <a id="registerSwitch">Already have an account?</a>
-      <button id="registerButton">
-        <span id="buttonText">Sign Up</span>
+      <button id="verifyButton">
+        <span id="buttonText">Verify</span>
         <div id="loadingSpinner"></div>
         <i id="successIcon" class="fas fa-check"></i>
       </button>      
@@ -51,6 +48,6 @@
     </div>
   </div>
   
-  <script type="module" src="../src/registerPage/registerPage.js"></script>
+  <script type="module" src="../../src/registerPage/verify.js"></script>
 </body>
 </html>

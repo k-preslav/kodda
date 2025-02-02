@@ -10,7 +10,6 @@ export async function registerUser(username, email, passwordHash) {
     });
 
     const data = await response.json();
-    console.log(data.token);
     
     if (data.token) {
       localStorage.setItem('token', data.token);
@@ -27,7 +26,6 @@ export async function registerUser(username, email, passwordHash) {
     });
     
     const data = await response.json();
-    console.log(data.token);
     
     if (data.token) {
         localStorage.setItem('token', data.token);
@@ -43,32 +41,79 @@ export async function autoLoginUser() {
             const decodedToken = decode(token);
             const currentTime = Date.now() / 1000;
 
-            // Check if the token is expired
             if (decodedToken.payload.exp > currentTime) {
-                
-                // Verify the token with the server
                 const verify = await verifyToken(token);
                 if (verify.ok) {
-                    // Check if the user exists
                     const exists = await userExists(token);
                     if (exists.ok) {
-                        return true; // Token is valid and user exists
+                        const verified = await isUserVerified();
+                        if (verified.verified) {
+                            return true;
+                        } else {
+                            sendVerificationCode().then((data) => {
+                                if (data.success) {
+                                    window.location.href = "../pages/register/verify.html";
+                                }
+                            });
+                        }
                     } else {
-                        return false; // User does not exist
+                        return false;
                     }
                 } else {
-                    return false; // Token is not valid
+                    console.log("Token is not valid");
+                    return false;
                 }
             } else {
-                localStorage.removeItem('token'); // Remove expired token
+                console.log("Token is expired");
+                localStorage.removeItem('token');
                 return false;
             }
         } catch (error) {
-            console.error("Error decoding token:", error.message);
+            console.error("Error decoding token:", error);
             return false;
         }
     }
+    console.log("No token found");
     return false;
+}
+
+export async function sendVerificationCode() {
+    const token = localStorage.getItem('token');
+
+    const decodedToken = decode(token);
+    const userId = decodedToken.payload.userId;
+    
+    const response = await fetch(`${API_BASE_URL}/send-user-verify`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId })
+    });
+
+    const data = await response.json();
+    return data;
+}
+
+export async function verifyCode(code) {
+    const token = localStorage.getItem('token');
+
+    const decodedToken = decode(token);
+    const userId = decodedToken.payload.userId;
+    
+    const response = await fetch(`${API_BASE_URL}/verify-user`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId, verificationCode: code })
+    });
+    
+    const data = await response.json();
+    console.log(data);
+    return data;
 }
 
 export async function verifyToken(token) {
@@ -79,7 +124,28 @@ export async function verifyToken(token) {
             'Authorization': `Bearer ${token}`
         }
     });
-    return response;
+
+    const data = await response.json();
+    return data;
+}
+
+export async function isUserVerified() {
+    const token = localStorage.getItem('token');
+    
+    const decodedToken = decode(token);
+    const userId = decodedToken.payload.userId;
+
+    const response = await fetch(`${API_BASE_URL}/is-user-verified`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: userId })
+    });
+
+    const data = await response.json();
+    return data;
 }
 
 export async function userExists(token) {
