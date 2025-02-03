@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       
-      resetPassword(newPasswordInput.value).then((data) => {
+      resetPassword(localStorage.getItem('username'), newPasswordInput.value).then((data) => {
         buttonText.textContent = "";
         successIcon.style.display = "inline";
 

@@ -8,13 +8,15 @@ export function setupFooterLinks() {
   
       switch (platform) {
         case 'fa-envelope':
-          const email = "preslav.important@outlook.com";
+          const email = "contact@kodda.app";
           navigator.clipboard.writeText(email).then(() => {
             alert("Email copied to clipboard: " + email);
           }).catch(err => {
             console.error("Failed to copy email: ", err);
           });
-          break;        
+
+          window.location.href = "mailto:" + email;
+          break;
         case 'fa-dev':
           window.open("https://dev.to/k_preslav", "_blank");
           break;

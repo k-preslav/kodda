@@ -1,6 +1,7 @@
 import { decode } from 'jwt-js-decode';
 
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "https://api.kodda.app";
+//const API_BASE_URL = "http://localhost:4000";
 
 export async function registerUser(username, email, passwordHash) {
     const response = await fetch(`${API_BASE_URL}/register`, {
@@ -101,34 +102,26 @@ export async function sendVerificationCode() {
     return data;
 }
 
-export async function sendResetPasswordLink() {
-    const token = localStorage.getItem('token');
-
+export async function sendResetPasswordLink(username) {
     const response = await fetch(`${API_BASE_URL}/send-reset-password-link`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
         },
+        body: JSON.stringify({ username })
     });
 
     const data = await response.json();
     return data;
 }
 
-export async function resetPassword(newPassword) {
-    const token = localStorage.getItem('token');
-
-    const decodedToken = decode(token);
-    const userId = decodedToken.payload.userId;
-
+export async function resetPassword(username, newPassword) {
     const response = await fetch(`${API_BASE_URL}/reset-password`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ userId, newPassword })
+        body: JSON.stringify({ username, newPassword })
     });
 
     const data = await response.json();

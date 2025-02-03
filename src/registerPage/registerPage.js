@@ -50,8 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   forgotPassword.addEventListener("click", () => { 
-    sendResetPasswordLink().then((data) => {
+    sendResetPasswordLink(usernameInput.value.toLowerCase()).then((data) => {
       if (data.success) {
+        localStorage.setItem('username', usernameInput.value.toLowerCase());
+
         sessionStorage.setItem('messagePageMsg', "Please check your email for a reset password link");
         window.location.href = "../pages/message.html";
       }
