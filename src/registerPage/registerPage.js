@@ -1,4 +1,4 @@
-import { isUserVerified, loginUser, registerUser, sendVerificationCode } from "../apiHelper.js";
+import { isUserVerified, loginUser, registerUser, sendResetPasswordLink, sendVerificationCode } from "../apiHelper.js";
 import { setupFooterLinks } from "../elements/footer/footerLinks.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerSwitch = document.getElementById("registerSwitch");
   
   const messageLabel = document.getElementById("messageLabel");
+  const forgotPassword = document.getElementById("changePasswordText");
+
   const signTitle = document.getElementById("signTitle");
   const loadingSpinner = document.getElementById("loadingSpinner");
   
@@ -43,6 +45,19 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       messageLabel.style.display = "none";
     }
+  });
+
+  forgotPassword.addEventListener("click", () => { 
+    sendResetPasswordLink().then((data) => {
+      if (data.success) {
+        sessionStorage.setItem('messagePageMsg', "Please check your email for a reset password link");
+        window.location.href = "../pages/message.html";
+      }
+      else {
+        sessionStorage.setItem('messagePageMsg', data.message);
+        window.location.href = "../pages/message.html";
+      }
+    });
   });
 
   function isValidEmail(email) {
@@ -128,7 +143,8 @@ document.addEventListener("DOMContentLoaded", () => {
     registerUser(usernameInput.value.toLowerCase(), emailInput.value.toLowerCase(), passwordInput.value).then((data) => {
       hideLoading();
       messageLabel.style.display = "block";
-      
+      forgotPassword.style.display = "none";
+
       if (data.userId) {
         showLoading();
         
@@ -182,6 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function login() {
     showLoading();
 
+    forgotPassword.style.display = "none";
+
     if (emailInput.value && !isValidEmail(emailInput.value)) {
       messageLabel.textContent = "Please enter a valid email address.";
       messageLabel.style.display = "block";
@@ -225,11 +243,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             sendVerificationCode().then((data) => {
               hideLoading();
+              successIcon.style.display = "inline";
               
               if (data.success) {
                 setTimeout(() => {
                   window.location.href = "../pages/register/verify.html";
-                }, 300);
+                }, 100);
               }
             });
           }
@@ -245,7 +264,8 @@ document.addEventListener("DOMContentLoaded", () => {
         buttonText.style.display = "inline";
         successIcon.style.display = "none";
         
-        messageLabel.textContent = data.invalidCredentials;
+        messageLabel.textContent = "The password is incorrect.";
+        forgotPassword.style.display = "block";
       }
       else if (data.fieldsRequired) {
         buttonText.style.display = "inline";

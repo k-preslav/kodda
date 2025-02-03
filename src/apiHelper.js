@@ -48,7 +48,9 @@ export async function autoLoginUser() {
                     if (exists.ok) {
                         const verified = await isUserVerified();
                         if (verified.verified) {
-                            return true;
+                            resetUserAttempts().then(() => {
+                                return true;
+                            });
                         } else {
                             sendVerificationCode().then((data) => {
                                 if (data.success) {
@@ -73,8 +75,10 @@ export async function autoLoginUser() {
             return false;
         }
     }
-    console.log("No token found");
-    return false;
+    else {
+        console.log("No token found");
+        return false;
+    }
 }
 
 export async function sendVerificationCode() {
@@ -90,6 +94,55 @@ export async function sendVerificationCode() {
             'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ userId })
+    });
+
+    const data = await response.json();
+    return data;
+}
+
+export async function sendResetPasswordLink() {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${API_BASE_URL}/send-reset-password-link`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    const data = await response.json();
+    return data;
+}
+
+export async function resetPassword(newPassword) {
+    const token = localStorage.getItem('token');
+
+    const decodedToken = decode(token);
+    const userId = decodedToken.payload.userId;
+
+    const response = await fetch(`${API_BASE_URL}/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId, newPassword })
+    });
+
+    const data = await response.json();
+    return data;
+}
+
+export async function resetUserAttempts() {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${API_BASE_URL}/reset-user-attempts`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
     });
 
     const data = await response.json();
