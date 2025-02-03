@@ -69,7 +69,6 @@ export async function autoLoginUser() {
                 }
             } else {
                 console.log("Token is expired");
-                localStorage.removeItem('token');
                 return false;
             }
         } catch (error) {
