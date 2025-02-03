@@ -55,7 +55,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 350px;
+  width: 360px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
   opacity: 0.5;
@@ -90,7 +90,7 @@ h2 {
 }
 
 input {
-  background-color: rgba(44, 44, 44, 0.55); /* Change this to any color */
+  background-color: rgba(44, 44, 44, 0.55);
   color: white;
   padding: 10px;
   border: none;
@@ -130,6 +130,65 @@ input:focus {
   text-shadow: 0px 4px 10px #25252585;
 }
 
+.termsCheckboxBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+.termsCheckboxBox label {
+  font-size: 14px;
+  padding: 0;
+  font-weight: 100;
+  color: #ffffffb6;
+  text-shadow: 0px 4px 10px #25252585;
+  margin-top: 3px;
+}
+
+.termsCheckboxBox a {
+  font-size: 14px;
+  padding: 0;
+  font-weight: 100;
+  color: #df77ffb6;
+  font-weight: 500;
+  margin-top: 3px;
+  transition: color 0.15s ease;
+}
+.termsCheckboxBox a:hover {
+  color: #df77ff;
+}
+
+.termsCheckboxBox input {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #3d3d3d;
+  background-color: rgba(44, 44, 44, 0.55);
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s;
+}
+
+.termsCheckboxBox input:checked {
+  background-color: rgb(132, 0, 219);
+}
+
+.termsCheckboxBox input:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
 #messageLabel {
   bottom: 10px;
   width: 100%;
@@ -139,6 +198,14 @@ input:focus {
   margin: 0;
   padding: 0;
   display: none;
+}
+
+#verifyText {
+  text-align: center;
+  font-size: 16px;
+  color: #ffffff98;
+  margin: 0;
+  padding: 0;
 }
 
 #changePasswordText {

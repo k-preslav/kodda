@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const buttonText = document.getElementById("buttonText");
   const successIcon = document.getElementById("successIcon");
   const registerSwitch = document.getElementById("registerSwitch");
+  const termsCheckboxBox = document.getElementsByClassName("termsCheckboxBox")[0];
+  const termsCheckbox = document.getElementById("termsCheckbox");
   
   const messageLabel = document.getElementById("messageLabel");
   const forgotPassword = document.getElementById("changePasswordText");
@@ -81,12 +83,14 @@ document.addEventListener("DOMContentLoaded", () => {
         signTitle.textContent = "Log in to your account";
         registerSwitch.textContent = "Don't have an account?";
         emailInput.style.display = "none";
+        termsCheckboxBox.style.display = "none";
       } else {
         registerType = "sign-up";
         buttonText.textContent = "Sign Up";
         signTitle.textContent = "Create a new account";
         registerSwitch.textContent = "Already have an account?";
         emailInput.style.display = "block";
+        termsCheckboxBox.style.display = "flex";
       }
       
       inputsContainer.classList.remove("fade-out");
@@ -136,7 +140,19 @@ document.addEventListener("DOMContentLoaded", () => {
       registerButton.disabled = false;
 
       return;
-    } else {
+    } else if (!termsCheckbox.checked) {
+      messageLabel.textContent = "To register, you must agree to the terms of use and privacy policy.";
+      messageLabel.style.display = "block";
+      
+      // Reset button state
+      hideLoading();
+      buttonText.style.display = "inline";
+      successIcon.style.display = "none";
+      registerButton.disabled = false;
+
+      return;
+    }
+    else {
       messageLabel.style.display = "none";
     }
 

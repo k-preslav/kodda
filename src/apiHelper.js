@@ -48,10 +48,11 @@ export async function autoLoginUser() {
                     if (exists.ok) {
                         const verified = await isUserVerified();
                         if (verified.verified) {
-                            resetUserAttempts().then(() => {
-                                return true;
-                            });
+                            resetUserAttempts();
+                            return true;
                         } else {
+                            console.log("User not verified");
+
                             sendVerificationCode().then((data) => {
                                 if (data.success) {
                                     window.location.href = "../pages/register/verify.html";
@@ -59,6 +60,7 @@ export async function autoLoginUser() {
                             });
                         }
                     } else {
+                        console.log("User does not exist");
                         return false;
                     }
                 } else {

@@ -10,8 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     changePasswordButton.addEventListener('click', () => {
       changePasswordButton.disabled = true;
-      successIcon.style.display = "none";
-      
       
       if (newPasswordInput.value !== confirmPasswordInput.value) {
         messageLabel.textContent = "Passwords do not match";
