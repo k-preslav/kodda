@@ -8,7 +8,7 @@ export function setupFooterLinks() {
   
       switch (platform) {
         case 'fa-envelope':
-          const email = "Kodda <contact@kodda.app>";
+          const email = "Kodda<contact@kodda.app>";
           navigator.clipboard.writeText(email).then(() => {
             alert("Email copied to clipboard: " + email);
           }).catch(err => {
