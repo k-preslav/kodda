@@ -35,6 +35,13 @@ export async function registerUser(username, email, passwordHash) {
     return data;
 }
 export async function autoLoginUser() {
+    const forceEnable = sessionStorage.getItem('activate');
+    if (!forceEnable || forceEnable !== "true") {
+        sessionStorage.setItem('messagePageMsg', "Kodda will be available on the 10th of February 2025!");
+        window.location.href = "../pages/message.html";
+        return;
+    }
+
     const token = localStorage.getItem('token');
 
     if (token) {

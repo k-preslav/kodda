@@ -1,6 +1,6 @@
 import { autoLoginUser } from "./apiHelper";
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async () => { 
   const isLoggedIn = await autoLoginUser();
 
   if (isLoggedIn === false) {
