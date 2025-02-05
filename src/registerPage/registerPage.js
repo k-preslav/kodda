@@ -181,10 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
           } else {
             messageLabel.textContent = "An unexpected error occurred. Please try again.";
             messageLabel.style.display = "block";
-            verifyButton.disabled = true;
+            registerButton.disabled = true;
 
             buttonText.style.display = "inline";
-            buttonText.textContent = "Verify";
+            buttonText.textContent = "Verifying...";
           }
         });
       }

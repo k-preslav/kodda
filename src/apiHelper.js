@@ -83,6 +83,22 @@ export async function autoLoginUser() {
     }
 }
 
+export async function setUserPlanTag(planTag) {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${API_BASE_URL}/set-user-plan`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ planTag })
+    });
+
+    const data = await response.json();
+    return data;
+}
+
 export async function sendVerificationCode() {
     const token = localStorage.getItem('token');
 

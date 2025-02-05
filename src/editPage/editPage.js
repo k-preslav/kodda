@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const languageTypeCodeBar = document.getElementById("languageType");
 
   const saveSnipButton = document.getElementById("saveSnippetButton");
+  saveSnipButton.disabled = true;
+
   const deleteSnipButton = document.getElementById("deleteSnippetButton");
 
   const loadingText = document.getElementById("loadingText");

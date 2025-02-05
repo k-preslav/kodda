@@ -1,4 +1,4 @@
-import { verifyCode } from "../apiHelper";
+import { setUserPlanTag, verifyCode } from "../apiHelper";
 
 document.addEventListener("DOMContentLoaded", () => {
   const codeInput = document.getElementById("codeInput");
@@ -20,16 +20,19 @@ document.addEventListener("DOMContentLoaded", () => {
         buttonText.style.display = "none";
         successIcon.style.display = "inline";
 
-        setTimeout(() => {
-          window.location.href = "../pages/new.html";
-        }, 600);
+        setUserPlanTag("Early Adopter").then((planData) => {
+          if (planData.success) {
+            setTimeout(() => {
+              window.location.href = "../pages/new.html";
+            }, 600);
+          }
+        });
       } else {
         messageLabel.textContent = "The code you entered is incorrect.";
         messageLabel.style.display = "block";
 
         verifyButton.disabled = false;
         buttonText.textContent = "Verify";
-
       }
     });
   });

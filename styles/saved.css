@@ -48,6 +48,25 @@ body {
 
   gap: 35px 0;
   padding: 25px;
+
+  overflow: auto;
+}
+
+.saved-gallery::-webkit-scrollbar {
+  width: 7px;
+}
+
+.saved-gallery::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.saved-gallery::-webkit-scrollbar-thumb {
+  background: #373737;
+  border-radius: 7px;
+}
+
+.saved-gallery::-webkit-scrollbar-thumb:hover {
+  background: #3b3b3b;
 }
 
 .saved-gallery:empty {
