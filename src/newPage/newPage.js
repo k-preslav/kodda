@@ -1,4 +1,4 @@
-import { addSnippet, autoLoginUser, getCodeProperties } from "../apiHelper.js";
+import { addSnippet, autoLoginUser, disableGuestMode, getCodeProperties, isGuestModeApplicable } from "../apiHelper.js";
 import { getWordsFromSpans, wrapWordsWithSpans } from "../editor/spanHelper.js";
 import { initializeZoomLevel } from "../editor/zoomHelper.js";
 import { attachDragLeave, attachDragOver, attachOnDrop } from "./dragDrop.js";
@@ -150,6 +150,11 @@ document.addEventListener("DOMContentLoaded", () => {
     saveSnipButton.disabled = true;
     disablePinnedButtons();
 
+    if (!isGuestModeApplicable()) {
+      alert("You must be logged in to save more than 1 snippet.");
+      window.location.href = "../index.html";
+    }
+
     autoLoginUser().then(async(res) => {
       if (!localStorage.getItem('token') || res === false) {
         window.location.href = "../index.html";
@@ -192,6 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
             saveSnipButton.disabled = false;
           }
           else {
+            disableGuestMode();
             reset(true);
             editor.setValue('');
           }

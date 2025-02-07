@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kodda - Account</title>
+
+  <link rel="stylesheet" href="../styles/navbar.css">
+  <link rel="stylesheet" href="../styles/account.css">
+  <link rel="stylesheet" href="../styles/button.css">
+
+  <link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+</head>
+<body>
+  <div class="navBar">
+    <div class="navBarLeft">
+        <h1 class="title">kodda</h1>
+        <p class="subtitle">early access</p>
+    </div>
+    <div class="navBarRight">
+        <a href="/pages/new.html">New</a>
+        <a href="/pages/saved.html">Saved</a>
+        <button><i class="fa-solid fa-user"></i></button>
+    </div>
+</div>
+<div id="background"></div>
+
+<div class="account-container">
+  <i class="fa-solid fa-user" id="userIcon"></i>
+  <div class="horizontal-container">
+    <input type="text" placeholder="Username" id="usernameInput">
+    <button id="saveButton" style="width: 50px;"><i class="fa-solid fa-save" id="saveIcon"></i></button>
+  </div>
+  
+  <div class="horizontal-container" id="controls">
+    <button style="background-color: rgb(179, 0, 0); width: 150px;" id="logOutButton">Log Out</button>
+    <button id="changePasswordButton">Change Password</button>
+  </div>
+</div>
+
+<script type="module" src="../src/accountPage/accountPage.js"></script>
+</body>
+</html>

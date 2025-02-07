@@ -11,23 +11,23 @@ export async function registerUser(username, email, passwordHash) {
     });
 
     const data = await response.json();
-    
+
     if (data.token) {
-      localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.token);
     }
-    
+
     return data;
-  }
-  
-  export async function loginUser(username, password) {
+}
+
+export async function loginUser(username, password) {
     const response = await fetch(`${API_BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
     });
-    
+
     const data = await response.json();
-    
+
     if (data.token) {
         localStorage.setItem('token', data.token);
     }
@@ -99,12 +99,41 @@ export async function setUserPlanTag(planTag) {
     return data;
 }
 
+export async function updateUsername(username) {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${API_BASE_URL}/update-username`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ username })
+    });
+
+    const data = await response.json();
+    return data;
+}
+
+export async function getUsername() {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${API_BASE_URL}/get-username`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    const data = await response.json();
+    return data;
+}
+
 export async function sendVerificationCode() {
     const token = localStorage.getItem('token');
 
     const decodedToken = decode(token);
     const userId = decodedToken.payload.userId;
-    
+
     const response = await fetch(`${API_BASE_URL}/send-user-verify`, {
         method: 'POST',
         headers: {
@@ -164,7 +193,7 @@ export async function verifyCode(code) {
 
     const decodedToken = decode(token);
     const userId = decodedToken.payload.userId;
-    
+
     const response = await fetch(`${API_BASE_URL}/verify-user`, {
         method: 'POST',
         headers: {
@@ -173,7 +202,7 @@ export async function verifyCode(code) {
         },
         body: JSON.stringify({ userId, verificationCode: code })
     });
-    
+
     const data = await response.json();
     console.log(data);
     return data;
@@ -194,7 +223,7 @@ export async function verifyToken(token) {
 
 export async function isUserVerified() {
     const token = localStorage.getItem('token');
-    
+
     const decodedToken = decode(token);
     const userId = decodedToken.payload.userId;
 

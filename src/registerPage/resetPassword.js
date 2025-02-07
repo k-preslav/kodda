@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         else {
           messageLabel.textContent = data.message;
+          successIcon.classList.add("fa-xmark");
+
           messageLabel.style.display = "block";
         }
       });

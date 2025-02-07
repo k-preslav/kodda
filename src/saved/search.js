@@ -64,6 +64,6 @@ const languageMatches = {
   "python": ["py", "python"],
   "go": ["golang", "go"],
   "csharp": ["cs", "c#", "csharp"],
-  "c": ["c"],
   "cpp": ["c++", "cpp"],
+  "c": ["c"],
 };
